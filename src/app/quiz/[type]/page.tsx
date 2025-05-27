@@ -1,5 +1,5 @@
 //src/app/quiz/[type]/page.tsx
-import QuizGame from '@/components/QuizGame';
+import QuizGame from '@/app/components/Quiz';
 
 interface PageProps {
   params: {
