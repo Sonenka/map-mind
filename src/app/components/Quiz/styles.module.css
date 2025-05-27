@@ -1,0 +1,22 @@
+.optionButton {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.correct {
+  background-color: #4CAF50 !important; /* зелёный */
+  color: white;
+}
+
+.incorrect {
+  background-color: #F44336 !important; /* красный */
+  color: white;
+}
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
