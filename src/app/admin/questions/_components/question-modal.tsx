@@ -1,38 +1,39 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Question } from './questions-table';
 
 type Props = {
   question: Question | null;
   onClose: () => void;
-  onSave: (question: Question) => void;
+  onSaved: () => void;
 };
 
-export function QuestionModal({ question, onClose, onSave }: Props) {
+export function QuestionModal({ question, onClose, onSaved }: Props) {
   const [form, setForm] = useState({
     id: question?.id || crypto.randomUUID(),
     question: question?.question || '',
-    options: question?.options.join(';') || '',
+    options: question?.options?.join(';') || '',
     correct: question?.correct || '',
   });
 
-  useEffect(() => {
-    setForm({
-      id: question?.id || crypto.randomUUID(),
-      question: question?.question || '',
-      options: question?.options.join(';') || '',
-      correct: question?.correct || '',
-    });
-  }, [question]);
+  const handleSubmit = async () => {
+    const payload = {
+      ...form,
+      options: form.options.split(';').map(opt => opt.trim()),
+    };
 
-  const handleSubmit = () => {
-    onSave({
-      id: form.id,
-      question: form.question,
-      options: form.options.split(';').map((opt) => opt.trim()),
-      correct: form.correct,
+    const res = await fetch(`/api/questions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
+
+    if (res.ok) {
+      onSaved();
+    } else {
+      alert('Ошибка при сохранении вопроса');
+    }
   };
 
   return (
@@ -73,12 +74,8 @@ export function QuestionModal({ question, onClose, onSave }: Props) {
         </div>
 
         <div className="flex justify-end space-x-2">
-          <button onClick={onClose} className="px-4 py-2 border rounded">
-            Отмена
-          </button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded">
-            Сохранить
-          </button>
+          <button onClick={onClose} className="px-4 py-2 border rounded">Отмена</button>
+          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded">Сохранить</button>
         </div>
       </div>
     </div>

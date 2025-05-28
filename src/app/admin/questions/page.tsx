@@ -8,53 +8,25 @@ export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
-  const [type] = useState('capitals'); // пример типа
 
   const fetchQuestions = async () => {
-    const res = await fetch(`/api/questions/${type}`);
+    const res = await fetch('/api/questions');
     const data = await res.json();
-    if (Array.isArray(data)) {
-      setQuestions(data);
-    } else {
-      setQuestions([]);
-    }
+    setQuestions(data);
   };
 
   useEffect(() => {
     fetchQuestions();
-  }, [type]);
+  }, []);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Удалить вопрос?')) return;
-
-    const res = await fetch(`/api/questions/${type}?id=${id}`, { method: 'DELETE' });
-    if (res.ok) {
-      fetchQuestions();
-    } else {
-      alert('Ошибка удаления вопроса');
-    }
-  };
-
-  const handleSave = async (question: Question) => {
-    const method = questions.some(q => q.id === question.id) ? 'PUT' : 'POST';
-
-    const res = await fetch(`/api/questions/${type}`, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(question),
-    });
-
-    if (res.ok) {
-      setShowModal(false);
-      fetchQuestions();
-    } else {
-      alert('Ошибка сохранения вопроса');
-    }
+    await fetch(`/api/questions?id=${id}`, { method: 'DELETE' });
+    fetchQuestions();
   };
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Вопросы: {type}</h1>
+      <h1 className="text-2xl font-bold mb-4">Вопросы</h1>
       <button
         onClick={() => {
           setSelectedQuestion(null);
@@ -78,7 +50,10 @@ export default function QuestionsPage() {
         <QuestionModal
           question={selectedQuestion}
           onClose={() => setShowModal(false)}
-          onSave={handleSave}
+          onSaved={() => {
+            setShowModal(false);
+            fetchQuestions();
+          }}
         />
       )}
     </div>

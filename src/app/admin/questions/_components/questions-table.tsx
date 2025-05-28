@@ -23,22 +23,16 @@ export function QuestionsTable({ questions, onEdit, onDelete }: Props) {
         </tr>
       </thead>
       <tbody>
-        {questions.map((q) => (
+        {questions.map((q: Question) => (
           <tr key={q.id}>
             <td className="border px-2 py-1">{q.question}</td>
             <td className="border px-2 py-1">{q.options.join(', ')}</td>
             <td className="border px-2 py-1">{q.correct}</td>
             <td className="border px-2 py-1 space-x-2">
-              <button
-                onClick={() => onEdit(q)}
-                className="text-blue-600 underline"
-              >
+              <button onClick={() => onEdit(q)} className="text-blue-600 underline">
                 Редактировать
               </button>
-              <button
-                onClick={() => onDelete(q.id)}
-                className="text-red-600 underline"
-              >
+              <button onClick={() => onDelete(q.id)} className="text-red-600 underline">
                 Удалить
               </button>
             </td>
