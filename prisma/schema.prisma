@@ -8,8 +8,9 @@ generator client {
 }
 
 model Question {
-  id       String   @id
+  id       String   @id @default(uuid())
+  type     String   @default("capitals")
   question String
-  options  String   // Можно хранить в JSON или как строку с разделителем
+  options  String[]
   correct  String
 }

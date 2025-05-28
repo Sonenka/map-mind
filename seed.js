@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const filePath = path.join(process.cwd(), 'data', 'capitals.csv');
+  const filePath = path.join(process.cwd(), 'data', 'questions.csv');
   const fileContent = fs.readFileSync(filePath, 'utf-8');
 
   const records = parse(fileContent, {
@@ -14,14 +14,13 @@ async function main() {
     skip_empty_lines: true,
   });
 
-  // records — массив объектов с полями: id, question, options, correct и т.п.
-
   for (const record of records) {
     await prisma.question.create({
       data: {
         id: record.id,
+        type: record.type,
         question: record.question,
-        options: record.options, // если нужно — сохраняй как строку с ; или как JSON.stringify
+        options: record.options, 
         correct: record.correct,
       },
     });

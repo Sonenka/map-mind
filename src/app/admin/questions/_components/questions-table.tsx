@@ -1,5 +1,6 @@
 export type Question = {
   id: string;
+  type: string;
   question: string;
   options: string[];
   correct: string;
@@ -16,6 +17,7 @@ export function QuestionsTable({ questions, onEdit, onDelete }: Props) {
     <table className="w-full border">
       <thead>
         <tr>
+          <th className="border px-2 py-1">Тип</th>
           <th className="border px-2 py-1">Вопрос</th>
           <th className="border px-2 py-1">Варианты</th>
           <th className="border px-2 py-1">Ответ</th>
@@ -25,8 +27,11 @@ export function QuestionsTable({ questions, onEdit, onDelete }: Props) {
       <tbody>
         {questions.map((q: Question) => (
           <tr key={q.id}>
+            <td className="border px-2 py-1">{q.type}</td>
             <td className="border px-2 py-1">{q.question}</td>
-            <td className="border px-2 py-1">{q.options.join(', ')}</td>
+            <td className="border px-2 py-1">
+              {Array.isArray(q.options) ? q.options.join(', ') : String(q.options)}
+            </td>
             <td className="border px-2 py-1">{q.correct}</td>
             <td className="border px-2 py-1 space-x-2">
               <button onClick={() => onEdit(q)} className="text-blue-600 underline">
@@ -42,3 +47,4 @@ export function QuestionsTable({ questions, onEdit, onDelete }: Props) {
     </table>
   );
 }
+

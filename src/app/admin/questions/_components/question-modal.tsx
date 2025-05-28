@@ -1,21 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Question } from './questions-table';
 
 type Props = {
   question: Question | null;
   onClose: () => void;
   onSaved: () => void;
+  type: string; // передаётся от родителя
 };
 
-export function QuestionModal({ question, onClose, onSaved }: Props) {
-  const [form, setForm] = useState({
+export function QuestionModal({ question, onClose, onSaved, type }: Props) {
+    const [form, setForm] = useState({
     id: question?.id || crypto.randomUUID(),
-    question: question?.question || '',
-    options: question?.options?.join(';') || '',
+    type: question?.type || type,
+    question: question?.question || '', 
+    options: Array.isArray(question?.options) ? question.options.join(';') : question?.options || '',
     correct: question?.correct || '',
   });
+
+  useEffect(() => {
+    if (question) {
+      setForm({
+        id: question.id,
+        type: question.type,
+        question: question.question,
+        options: Array.isArray(question.options) ? question.options.join(';') : question.options || '',
+        correct: question.correct,
+      });
+    }
+  }, [question]);
 
   const handleSubmit = async () => {
     const payload = {
@@ -23,7 +37,7 @@ export function QuestionModal({ question, onClose, onSaved }: Props) {
       options: form.options.split(';').map(opt => opt.trim()),
     };
 
-    const res = await fetch(`/api/questions`, {
+    const res = await fetch(`/api/questions/${type}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -42,6 +56,16 @@ export function QuestionModal({ question, onClose, onSaved }: Props) {
         <h2 className="text-lg font-bold mb-4">
           {question ? 'Редактировать вопрос' : 'Добавить вопрос'}
         </h2>
+
+        <div className="mb-2">
+          <label className="block mb-1">Тип</label>
+          <input
+            type="text"
+            value={form.type}
+            disabled
+            className="w-full border p-2 rounded bg-gray-100 text-gray-600"
+          />
+        </div>
 
         <div className="mb-2">
           <label className="block mb-1">Вопрос</label>
