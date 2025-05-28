@@ -3,7 +3,6 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden' }}>
-      {/* Фоновое видео */}
       <video
         autoPlay
         loop
@@ -23,7 +22,6 @@ export default function Home() {
         Your browser does not support the video tag.
       </video>
 
-      {/* Затемнение */}
       <div
         style={{
           position: 'absolute',
@@ -36,7 +34,6 @@ export default function Home() {
         }}
       />
 
-      {/* Контент */}
       <div style={{
         maxWidth: '500px',
         margin: '0 auto',
@@ -46,7 +43,6 @@ export default function Home() {
       }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>MapMind</h1>
 
-        {/* Кнопки меню */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Link
             href="/singleplayer"

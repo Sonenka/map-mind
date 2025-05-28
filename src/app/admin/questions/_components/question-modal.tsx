@@ -7,7 +7,7 @@ type Props = {
   question: Question | null;
   onClose: () => void;
   onSaved: () => void;
-  type: string; // передаётся от родителя
+  type: string; 
 };
 
 export function QuestionModal({ question, onClose, onSaved, type }: Props) {

@@ -14,15 +14,14 @@ export default function Question({
   const [selected, setSelected] = useState<string | null>(null);
 
   const handleClick = (option: string) => {
-    if (selected) return; // блокируем повторный выбор
+    if (selected) return; 
 
     setSelected(option);
     const isCorrect = option === data.correct;
 
-    // Пауза перед переходом к следующему вопросу
     setTimeout(() => {
       onAnswer(isCorrect);
-      setSelected(null); // сбрасываем состояние
+      setSelected(null); 
     }, 1000);
   };
 

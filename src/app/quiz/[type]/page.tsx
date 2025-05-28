@@ -1,4 +1,3 @@
-//src/app/quiz/[type]/page.tsx
 import QuizGame from '@/app/components/Quiz';
 
 interface PageProps {
@@ -7,8 +6,10 @@ interface PageProps {
   };
 }
 
-export default function QuizPage({ params }: PageProps) {
-  if (!params?.type) {
+export default async function QuizPage({ params }: PageProps) {
+  const { type } = await params;
+
+  if (!type || typeof type !== 'string') {
     return (
       <div style={{ 
         padding: '20px', 
@@ -28,8 +29,7 @@ export default function QuizPage({ params }: PageProps) {
       margin: '0 auto', 
       padding: '20px' 
     }}>
-      {/* QuizGame — клиентский компонент */}
-      <QuizGame quizType={params.type} />
+      <QuizGame quizType={type} />
     </div>
   );
 }
