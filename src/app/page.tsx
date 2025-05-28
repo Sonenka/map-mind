@@ -1,62 +1,97 @@
 import Link from 'next/link';
 
 export default function Home() {
-  const quizTypes = [
-    { id: 'capitals', name: 'столицы' },
-    { id: 'flags', name: 'флаги' },
-    { id: 'photos', name: 'фото' },
-    { id: 'contours', name: 'контур' },
-    { id: 'multiplayer', name: 'мультиплеер' },
-    { id: 'secret', name: 'секрет' }
-  ];
-
   return (
-    <div style={{ 
-      maxWidth: '500px', 
-      margin: '0 auto', 
-      padding: '20px',
-      textAlign: 'center'
-    }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '30px' }}>MapMind</h1>
-      
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden' }}>
+      {/* Фоновое видео */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -2,
+        }}
+      >
+        <source src="/bg.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Затемнение */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          zIndex: -1,
+        }}
+      />
+
+      {/* Контент */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '15px',
-        marginBottom: '30px'
+        maxWidth: '500px',
+        margin: '0 auto',
+        padding: '20px',
+        textAlign: 'center',
+        color: 'white'
       }}>
-        {quizTypes.map((quiz) => (
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>MapMind</h1>
+
+        {/* Кнопки меню */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Link
-            key={quiz.id}
-            href={`/quiz/${quiz.id}`}
+            href="/singleplayer"
             style={{
               padding: '20px',
               backgroundColor: '#3498db',
               color: 'white',
               textDecoration: 'none',
-              borderRadius: '8px',
-              fontSize: '1.2rem'
+              borderRadius: '10px',
+              fontSize: '1.3rem'
             }}
           >
-            {quiz.name}
+            Одиночная игра
           </Link>
-        ))}
-      </div>
 
-      <Link
-        href="/ranking"
-        style={{
-          padding: '15px 30px',
-          backgroundColor: '#2ecc71',
-          color: 'white',
-          textDecoration: 'none',
-          borderRadius: '8px',
-          fontSize: '1.1rem',
-          display: 'inline-block'
-        }}
-      >
-        Рейтинг
-      </Link>
+          <button
+            disabled
+            style={{
+              padding: '20px',
+              backgroundColor: '#95a5a6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              fontSize: '1.3rem',
+              cursor: 'not-allowed'
+            }}
+          >
+            Многопользовательская игра
+          </button>
+
+          <Link
+            href="/ranking"
+            style={{
+              padding: '20px',
+              backgroundColor: '#2ecc71',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '10px',
+              fontSize: '1.3rem'
+            }}
+          >
+            Рейтинг
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

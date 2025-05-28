@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Play, Nunito } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Основной шрифт для текста
+const play = Play({
   subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-play",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Шрифт для заголовков
+const nunito = Nunito({
   subsets: ["latin"],
+  weight: ["400", "700", "800"],
+  variable: "--font-nunito",
 });
 
 export const metadata: Metadata = {
@@ -23,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${play.variable} ${nunito.variable}`}>
+      <body>
         {children}
       </body>
     </html>

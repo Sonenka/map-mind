@@ -5,8 +5,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ededed;
+    --foreground: #0a0a0a;
   }
 }
 
@@ -39,4 +39,49 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+
+body {
+  font-family: var(--font-play), sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Стили для заголовков */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-nunito), sans-serif;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+/* Конкретные стили для каждого уровня заголовков */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+/* Дополнительные глобальные стили */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Классы для ручного применения шрифтов */
+.font-play {
+  font-family: var(--font-play), sans-serif;
+}
+
+.font-nunito {
+  font-family: var(--font-nunito), sans-serif;
 }

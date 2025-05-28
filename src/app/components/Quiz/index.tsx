@@ -21,24 +21,31 @@ export default function QuizGame({ quizType }: { quizType: string }) {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    setStatus('loading');
+  setStatus('loading');
 
-    fetch(`/api/questions/${quizType}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Ошибка загрузки данных');
-        return res.json();
-      })
-      .then((data) => {
-        if (!Array.isArray(data)) throw new Error('Неверный формат данных');
-        setQuestions(data);
-        setStatus('ready');
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-        setStatus('error');
-      });
-  }, [quizType]);
+  fetch(`/api/questions/${quizType}`)
+    .then((res) => {
+      if (!res.ok) throw new Error('Ошибка загрузки данных');
+      return res.json();
+    })
+    .then((data) => {
+      if (!Array.isArray(data)) throw new Error('Неверный формат данных');
+
+      const parsed = data.map((q) => ({
+        ...q,
+        options: typeof q.options === 'string' ? q.options.split(';').map((opt: string) => opt.trim()) : q.options,
+      }));
+
+      setQuestions(parsed);
+      setStatus('ready');
+    })
+    .catch((err) => {
+      console.error(err);
+      setError(err.message);
+      setStatus('error');
+    });
+}, [quizType]);
+
 
   const handleAnswer = (isCorrect: boolean) => {
     if (isCorrect) setScore((prev) => prev + 1);
