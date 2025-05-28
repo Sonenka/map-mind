@@ -1,17 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(_: Request, { params }: { params: { type: string } }) {
-  const { type } = params;
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const type = url.pathname.split('/').pop();
 
   try {
     const questions = await prisma.question.findMany({
       where: { type },
     });
 
-    return NextResponse.json(questions);
+    const parsed = questions.map(q => ({
+      ...q,
+      options: typeof q.options === 'string' ? q.options.split(';').map(opt => opt.trim()) : q.options,
+    }));
+
+    return NextResponse.json(parsed);
   } catch (error) {
     return NextResponse.json({ error: 'Ошибка получения вопросов' }, { status: 500 });
   }
