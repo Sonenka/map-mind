@@ -22,27 +22,29 @@ export async function POST(request: Request, { params }: { params: { type: strin
   const data = await request.json();
 
   try {
-    await prisma.question.upsert({
+
+    const result = await prisma.question.upsert({
       where: { id: data.id },
       update: {
         question: data.question,
         options: data.options,
         correct: data.correct,
+        type: data.type, 
       },
       create: {
         id: data.id,
         question: data.question,
         options: data.options,
         correct: data.correct,
-        type,
+        type: data.type, // обязательно!
       },
     });
 
+
     return NextResponse.json({ success: true });
   } catch (error: any) {
-  console.error('Ошибка при сохранении вопроса:', error);
-  return NextResponse.json({ error: 'Ошибка сохранения', details: error.message }, { status: 500 });
-}
+    return NextResponse.json({ error: 'Ошибка сохранения', details: error.message }, { status: 500 });
+  }
 }
 
 export async function DELETE(request: Request, { params }: { params: { type: string } }) {

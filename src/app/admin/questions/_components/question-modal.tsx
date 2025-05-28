@@ -34,7 +34,7 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
   const handleSubmit = async () => {
     const payload = {
       ...form,
-      options: form.options.split(';').map(opt => opt.trim()),
+      options: form.options,
     };
 
     const res = await fetch(`/api/questions/${type}`, {
