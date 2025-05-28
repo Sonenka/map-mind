@@ -1,5 +1,5 @@
-// src/components/Quiz/index.tsx
 'use client';
+
 import { useEffect, useState } from 'react';
 import Question from './Question';
 import ProgressBar from './ProgressBar';
@@ -57,7 +57,6 @@ export default function QuizGame({ quizType }: { quizType: string }) {
     setScore(0);
   };
 
-  // Загрузка
   if (status === 'loading') {
     return (
       <div className={styles.container}>
@@ -66,7 +65,6 @@ export default function QuizGame({ quizType }: { quizType: string }) {
     );
   }
 
-  // Ошибка
   if (status === 'error') {
     return (
       <div className={styles.container}>
@@ -77,7 +75,6 @@ export default function QuizGame({ quizType }: { quizType: string }) {
     );
   }
 
-  // Завершение
   if (currentIndex >= questions.length) {
     return (
       <div className={styles.container}>
@@ -89,7 +86,6 @@ export default function QuizGame({ quizType }: { quizType: string }) {
     );
   }
 
-  // Игровой экран
   return (
     <div className={styles.container}>
       <ProgressBar current={currentIndex + 1} total={questions.length} />

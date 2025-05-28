@@ -23,43 +23,43 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: Request, { params }: { params: { type: string } }) {
-  const { type } = params;
+export async function POST(request: NextRequest) {
+  const url = new URL(request.url);
+  const type = url.pathname.split('/').pop();
+
   const data = await request.json();
 
   try {
-
-    const result = await prisma.question.upsert({
+    await prisma.question.upsert({
       where: { id: data.id },
       update: {
         question: data.question,
-        options: data.options,
+        options: Array.isArray(data.options) ? data.options.join(';') : data.options,
         correct: data.correct,
-        type: data.type, 
+        type,
       },
       create: {
         id: data.id,
         question: data.question,
-        options: data.options,
+        options: Array.isArray(data.options) ? data.options.join(';') : data.options,
         correct: data.correct,
-        type: data.type, // обязательно!
+        type,
       },
     });
 
-
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    console.error('Ошибка при сохранении вопроса:', error);
     return NextResponse.json({ error: 'Ошибка сохранения', details: error.message }, { status: 500 });
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { type: string } }) {
-  const { type } = params;
-  const { id } = await request.json();
+export async function DELETE(request: NextRequest) {
+  const data = await request.json();
 
   try {
     await prisma.question.delete({
-      where: { id },
+      where: { id: data.id },
     });
 
     return NextResponse.json({ success: true });

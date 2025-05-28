@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { Play, Nunito } from "next/font/google";
 import "./globals.css";
 
-// Основной шрифт для текста
 const play = Play({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-play",
 });
 
-// Шрифт для заголовков
 const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "700", "800"],

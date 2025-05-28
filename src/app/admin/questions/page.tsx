@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { QuestionModal } from './_components/question-modal';
 import { QuestionsTable, Question } from './_components/questions-table';

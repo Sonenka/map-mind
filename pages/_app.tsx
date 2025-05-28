@@ -1,4 +1,3 @@
-// pages/_app.tsx
 import type { AppProps } from 'next/app'
 import { Inter } from 'next/font/google'
 

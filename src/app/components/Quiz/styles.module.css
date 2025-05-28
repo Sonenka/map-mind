@@ -7,12 +7,12 @@
 }
 
 .correct {
-  background-color: #4CAF50 !important; /* зелёный */
+  background-color: #4CAF50 !important; 
   color: white;
 }
 
 .incorrect {
-  background-color: #F44336 !important; /* красный */
+  background-color: #F44336 !important;
   color: white;
 }
 

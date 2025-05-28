@@ -1,4 +1,3 @@
-// components/BackgroundVideo.tsx
 const BackgroundVideo = () => (
   <video
     autoPlay

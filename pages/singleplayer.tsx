@@ -11,7 +11,6 @@ export default function Singleplayer() {
 
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden' }}>
-      {/* Фоновое видео */}
       <video
         autoPlay
         loop
@@ -31,7 +30,6 @@ export default function Singleplayer() {
         Your browser does not support the video tag.
       </video>
 
-      {/* Затемнение */}
       <div
         style={{
           position: 'absolute',
@@ -44,7 +42,6 @@ export default function Singleplayer() {
         }}
       />
 
-      {/* Контент */}
       <div style={{
         maxWidth: '600px',
         margin: '0 auto',
@@ -77,7 +74,6 @@ export default function Singleplayer() {
           ))}
         </div>
 
-        {/* Кнопка назад */}
         <Link
           href="/"
           style={{

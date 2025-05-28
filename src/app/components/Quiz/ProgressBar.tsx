@@ -1,4 +1,3 @@
-//src/components/Quiz/ProgressBar.tsx
 'use client';
 
 import styles from './styles.module.css';
