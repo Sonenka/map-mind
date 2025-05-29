@@ -8,9 +8,9 @@ generator client {
 }
 
 model Question {
-  id       String   @id @default(uuid())
-  type     String   @default("capitals")
+  id       String @id
   question String
-  options  String[]
+  options  String
   correct  String
+  type     String
 }

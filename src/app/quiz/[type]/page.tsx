@@ -1,4 +1,4 @@
-import QuizGame from '@/app/components/Quiz';
+import QuizGame from '../../../components/Quiz';
 
 interface PageProps {
   params: {
