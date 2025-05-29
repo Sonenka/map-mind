@@ -1,0 +1,58 @@
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  text-align: center;
+  color: white;
+}
+
+.title {
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+}
+
+.quizGrid {
+  display: grid;
+  grid-template-columns: repeat(1fr, 1fr);
+  gap: 20px;
+}
+
+.quizLink {
+  padding: 18px;
+  background-color: #2980b9;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 12px 24px;
+  background-color: #7f8c8d;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1rem;
+}
