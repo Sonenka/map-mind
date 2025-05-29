@@ -1,4 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server';
+// src/app/api/questions/[type]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -7,10 +8,14 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const type = url.pathname.split('/').pop();
 
+  console.log('TYPE:', type); // <--- лог
+
   try {
     const questions = await prisma.question.findMany({
       where: { type },
     });
+
+    console.log('QUESTIONS:', questions); // <--- лог
 
     const parsed = questions.map(q => ({
       ...q,
@@ -19,6 +24,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
+    console.error('ERROR:', error); // <--- лог
     return NextResponse.json({ error: 'Ошибка получения вопросов' }, { status: 500 });
   }
 }
