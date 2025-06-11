@@ -3,6 +3,8 @@
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 .videoBackground {
@@ -31,10 +33,16 @@
   padding: 20px;
   text-align: center;
   color: white;
+  
+  height: 100%;
+  margin-top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 96px;
   margin-bottom: 40px;
 }
 
@@ -45,23 +53,47 @@
 }
 
 .menuLink {
-  padding: 20px;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 1.3rem;
+  padding: 24px 32px;
+  border-radius: 100px;
+
+  border: 3px #64acff solid;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #449bff;
+
+  font-size: 28px;
+  height: 100px;
+}
+
+.menuLink:hover {
+  box-shadow: 7px 5px 56px -14px #a0cdff;
+}
+
+.menuLink:active {
+  transform: scale(0.97);
+  box-shadow: 7px 5px 56px -10px #449bff;
+  border: 3px #8cc2ff solid;
 }
 
 .singleplayer {
-  background-color: #3498db;
+  
 }
 
 .multiplayer {
   background-color: #95a5a6;
-  border: none;
+  border: 3px #95a5a6 solid;
   cursor: not-allowed;
 }
 
+.multiplayer:hover {
+  box-shadow: none;
+}
+
+.multiplayer:active {
+  transform: none;
+}
+
 .ranking {
-  background-color: #2ecc71;
+  
 }
