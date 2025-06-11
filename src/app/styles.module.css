@@ -53,11 +53,13 @@
 }
 
 .menuLink {
-  padding: 24px 32px;
+  /* padding: 50px 32px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 100px;
 
   border: 3px #64acff solid;
-  text-align: center;
   cursor: pointer;
   transition: 0.4s;
   background-color: #449bff;
@@ -95,5 +97,5 @@
 }
 
 .ranking {
-  
+
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { QuestionType } from '../../../lib/types';
+import { QuestionType } from '../../../lib/types.ts';
 import styles from './styles.module.css';
 
 export default function Question({

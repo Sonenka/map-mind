@@ -38,12 +38,31 @@
 }
 
 .quizLink {
-  padding: 18px;
-  background-color: #2980b9;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 1.2rem;
+  padding: 24px 32px;
+  border-radius: 100px;
+
+  border: 3px #64acff solid;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #449bff;
+
+  font-size: 28px;
+  height: 100px;
+
+  font-family: var(--font-play);
+}
+
+.quizLink:hover {
+  box-shadow: 7px 5px 56px -14px #a0cdff;
+}
+
+.quizLink:active {
+  transform: scale(0.97);
+  box-shadow: 7px 5px 56px -10px #449bff;
+  border: 3px #8cc2ff solid;
 }
 
 .backLink {
