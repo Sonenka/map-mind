@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import styles from './styles.module.css';
+import btnStyles from '../components/MenuButton/MenuButton.module.css';
+import MenuButton from '@/components/MenuButton/MenuButton'; // или укажи относительный путь
 
 export default function Home() {
   return (
@@ -21,26 +22,26 @@ export default function Home() {
         <h1 className={styles.title}>MapMind</h1>
 
         <div className={styles.menu}>
-          <Link
-            href="/singleplayer"
+          <MenuButton
+            href="/single"
             className={`${styles.menuLink} ${styles.singleplayer}`}
           >
             Одиночная игра
-          </Link>
+          </MenuButton>
 
-          <button
+          <MenuButton
             disabled
-            className={`${styles.menuLink} ${styles.multiplayer}`}
+            className={`${btnStyles.disabled}`}
           >
             Многопользовательская игра
-          </button>
+          </MenuButton>
 
-          <Link
-            href="/ranking"
+          <MenuButton
+            href="/rating"
             className={`${styles.menuLink} ${styles.ranking}`}
           >
             Рейтинг
-          </Link>
+          </MenuButton>
         </div>
       </div>
     </div>

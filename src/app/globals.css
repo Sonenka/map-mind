@@ -41,14 +41,14 @@ a {
 }
 
 
-body {
+body, a, div {
   font-family: var(--font-play), sans-serif;
   margin: 0;
   padding: 0;
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6, a {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-nunito), sans-serif;
   margin: 0 0 1rem 0;
   line-height: 1.2;

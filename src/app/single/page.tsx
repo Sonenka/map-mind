@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import styles from './styles.module.css';
+import MenuButton from '@/components/MenuButton/MenuButton'; // путь можно скорректировать при необходимости
 
 export default function Singleplayer() {
   const quizTypes = [
@@ -29,22 +29,22 @@ export default function Singleplayer() {
 
         <div className={styles.quizGrid}>
           {quizTypes.map((quiz) => (
-            <Link
+            <MenuButton
               key={quiz.id}
               href={`/quiz/${quiz.id}`}
               className={styles.quizLink}
             >
               {quiz.name}
-            </Link>
+            </MenuButton>
           ))}
         </div>
 
-        <Link
+        <MenuButton
           href="/"
           className={styles.backLink}
         >
           ← Назад
-        </Link>
+        </MenuButton>
       </div>
     </div>
   );
