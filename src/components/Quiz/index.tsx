@@ -35,7 +35,7 @@ export default function QuizGame({ quizType }: { quizType: string }) {
           ...q,
           options: typeof q.options === 'string' ? q.options.split(';').map((opt: string) => opt.trim()) : q.options,
         }));
-
+        console.log(parsed[1].options[0]);
         setQuestions(parsed);
         setStatus('ready');
       })
@@ -85,11 +85,46 @@ export default function QuizGame({ quizType }: { quizType: string }) {
       </div>
     );
   }
-
+  const currentQuestion = questions[currentIndex];
+  const isImageQuestion = currentQuestion.options[0]?.startsWith('http');
   return (
     <div className={styles.container}>
       <ProgressBar current={currentIndex + 1} total={questions.length} />
-      <Question data={questions[currentIndex]} onAnswer={handleAnswer} />
+      
+      <h2 className={styles.questionText}>{currentQuestion.question}</h2>
+
+      {isImageQuestion ? (
+        <div className={styles.imageOptions}>
+          {currentQuestion.options.map((url, index) => (
+            <div 
+              key={index}
+              className={styles.option}
+              onClick={() => handleAnswer(url === currentQuestion.correct)}
+            >
+              <img
+                src={url}
+                alt={`Флаг ${index + 1}`}
+                className={styles.flagImage}
+                onError={(e) => {
+                  e.currentTarget.src = '/default-flag.png'; // Фолбек изображение
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.textOptions}>
+          {currentQuestion.options.map((option, index) => (
+            <button
+              key={index}
+              className={styles.option}
+              onClick={() => handleAnswer(option === currentQuestion.correct)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

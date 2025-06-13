@@ -4,6 +4,7 @@ import MenuButton from '@/components/MenuButton/MenuButton'; // или укаж�
 
 export default function Home() {
   return (
+
     <div className={styles.container}>
       <video
         autoPlay
