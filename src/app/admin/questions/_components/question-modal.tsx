@@ -11,30 +11,61 @@ type Props = {
 };
 
 export function QuestionModal({ question, onClose, onSaved, type }: Props) {
-    const [form, setForm] = useState({
+  const [form, setForm] = useState({
     id: question?.id || crypto.randomUUID(),
     type: question?.type || type,
     question: question?.question || '', 
-    options: Array.isArray(question?.options) ? question.options.join(';') : question?.options || '',
+    options: ['', '', '', ''] as string[], // Явно указываем тип string[]
     correct: question?.correct || '',
   });
 
   useEffect(() => {
     if (question) {
+      // Безопасное преобразование options в массив
+      const optionsArray = typeof question.options === 'string' 
+        ? question.options.split(';') 
+        : Array.isArray(question.options) 
+          ? question.options 
+          : [];
+      
+      // Заполняем массив до 4 элементов пустыми строками
+      const filledOptions = [...optionsArray.slice(0, 4)];
+      while (filledOptions.length < 4) {
+        filledOptions.push('');
+      }
+      
       setForm({
         id: question.id,
         type: question.type,
         question: question.question,
-        options: Array.isArray(question.options) ? question.options.join(';') : question.options || '',
+        options: filledOptions,
         correct: question.correct,
       });
     }
   }, [question]);
 
+  const handleOptionChange = (index: number, value: string) => {
+    const newOptions = [...form.options];
+    newOptions[index] = value;
+    setForm({ ...form, options: newOptions });
+  };
+
   const handleSubmit = async () => {
+    // Проверяем, что все варианты заполнены
+    if (form.options.some(opt => !opt.trim())) {
+      alert('Пожалуйста, заполните все варианты ответа');
+      return;
+    }
+
+    // Проверяем, что правильный ответ выбран из вариантов
+    if (!form.options.includes(form.correct)) {
+      alert('Правильный ответ должен совпадать с одним из вариантов');
+      return;
+    }
+
     const payload = {
       ...form,
-      options: form.options,
+      options: form.options.join(';'), // Объединяем в строку для сохранения
     };
 
     const res = await fetch(`/api/questions/${type}`, {
@@ -78,23 +109,36 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
         </div>
 
         <div className="mb-2">
-          <label className="block mb-1">Варианты (через ;)</label>
-          <input
-            type="text"
-            value={form.options}
-            onChange={(e) => setForm({ ...form, options: e.target.value })}
-            className="w-full border p-2 rounded"
-          />
+          <label className="block mb-1">Варианты ответов</label>
+          {[0, 1, 2, 3].map((index) => (
+            <div key={index} className="mb-2">
+              <input
+                type="text"
+                value={form.options[index] || ''}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                className="w-full border p-2 rounded"
+                placeholder={`Вариант ${index + 1}`}
+              />
+            </div>
+          ))}
         </div>
 
         <div className="mb-4">
           <label className="block mb-1">Правильный ответ</label>
-          <input
-            type="text"
+          <select
             value={form.correct}
             onChange={(e) => setForm({ ...form, correct: e.target.value })}
             className="w-full border p-2 rounded"
-          />
+          >
+            <option value="">Выберите правильный ответ</option>
+            {form.options
+              .filter(opt => opt.trim())
+              .map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+          </select>
         </div>
 
         <div className="flex justify-end space-x-2">
