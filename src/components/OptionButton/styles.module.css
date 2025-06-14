@@ -1,0 +1,34 @@
+/* OptionButton.module.css */
+
+.option {
+  background-color: #f5f5f5;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  color: black;
+  user-select: none;
+}
+
+.option:hover:not(:disabled) {
+  background-color: #eaeaea;
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.correct {
+  background-color: #d4edda !important;
+  border-color: #28a745 !important;
+  color: #155724;
+}
+
+.incorrect {
+  background-color: #f8d7da !important;
+  border-color: #dc3545 !important;
+  color: #721c24;
+}

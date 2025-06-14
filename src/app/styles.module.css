@@ -3,6 +3,8 @@
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 .videoBackground {
@@ -31,10 +33,16 @@
   padding: 20px;
   text-align: center;
   color: white;
+  
+  height: 100%;
+  margin-top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 96px;
   margin-bottom: 40px;
 }
 
@@ -42,26 +50,4 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.menuLink {
-  padding: 20px;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 1.3rem;
-}
-
-.singleplayer {
-  background-color: #3498db;
-}
-
-.multiplayer {
-  background-color: #95a5a6;
-  border: none;
-  cursor: not-allowed;
-}
-
-.ranking {
-  background-color: #2ecc71;
 }

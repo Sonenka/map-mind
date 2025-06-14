@@ -1,22 +1,132 @@
-.optionButton {
-  padding: 10px;
-  margin: 5px;
+/* styles.module.css */
+.body {
+  height: 100vh;
+}
+
+.answerContainer {
+  max-width: 700px;
+  padding: 2rem;
+  text-align: center;
+  background-color: #e6f3ff;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 70vh;
+  width: 70vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.questionText {
+  font-size: 52px;
+  font-weight: bold;
+}
+
+.textOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.option {
+  background-color: #f5f5f5;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  color: black;
+}
+
+.option:hover {
+  background-color: #eaeaea;
+}
+
+.option.correct {
+  background-color: #d4edda !important;
+  border-color: #28a745 !important;
+}
+
+.option.incorrect {
+  background-color: #f8d7da !important;
+  border-color: #dc3545 !important;
+}
+
+.imageOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  margin-top: 1rem;
+}
+
+.flagImage {
+  width: 100px;
+  height: 60px;
+  object-fit: cover;
+  border: 2px solid #ccc;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.2s ease;
 }
 
-.correct {
-  background-color: #4CAF50 !important; 
+.flagImage:hover {
+  transform: scale(1.05);
+}
+
+.button {
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #4caf50;
   color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.incorrect {
-  background-color: #F44336 !important;
-  color: white;
+.button:hover {
+  background-color: #45a049;
 }
 
-.disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.secondaryButton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #ddd;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background-color: #ccc;
+}
+
+.homeLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: #0070f3;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.homeLink:hover {
+  color: #0059c1;
 }

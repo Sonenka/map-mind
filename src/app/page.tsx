@@ -1,8 +1,10 @@
-import Link from 'next/link';
 import styles from './styles.module.css';
+import btnStyles from '../components/MenuButton/MenuButton.module.css';
+import MenuButton from '@/components/MenuButton/MenuButton'; // или укажи относительный путь
 
 export default function Home() {
   return (
+
     <div className={styles.container}>
       <video
         autoPlay
@@ -21,26 +23,23 @@ export default function Home() {
         <h1 className={styles.title}>MapMind</h1>
 
         <div className={styles.menu}>
-          <Link
-            href="/singleplayer"
-            className={`${styles.menuLink} ${styles.singleplayer}`}
+          <MenuButton
+            href="/single"
           >
             Одиночная игра
-          </Link>
+          </MenuButton>
 
-          <button
-            disabled
-            className={`${styles.menuLink} ${styles.multiplayer}`}
+          <MenuButton
+            variant="disabled"
           >
             Многопользовательская игра
-          </button>
+          </MenuButton>
 
-          <Link
-            href="/ranking"
-            className={`${styles.menuLink} ${styles.ranking}`}
+          <MenuButton
+            href="/rating"
           >
             Рейтинг
-          </Link>
+          </MenuButton>
         </div>
       </div>
     </div>
