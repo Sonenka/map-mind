@@ -13,7 +13,7 @@ type QuestionType = {
   correct: string;
 };
 
-export default function BaseQuiz({ quizType }: { quizType: string }) {
+export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, isImageQuiz: boolean }) {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -21,9 +21,6 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   const [error, setError] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
-
-  const currentQuestion = questions[currentIndex];
-  const isImageQuestion = currentQuestion?.options?.[0]?.startsWith('http');
 
   useEffect(() => {
     setStatus('loading');
@@ -53,7 +50,9 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   const handleAnswer = (isCorrect: boolean, index: number) => {
     setSelectedIndex(index);
     setCorrectIndex(currentQuestion.options.findIndex(opt => opt === currentQuestion.correct));
+
     if (isCorrect) setScore((prev) => prev + 1);
+
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
       setSelectedIndex(null);
@@ -69,7 +68,11 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   };
 
   if (status === 'loading') {
-    return <div className={styles.answerContainer}><h3>Загрузка...</h3></div>;
+    return (
+      <div className={styles.answerContainer}>
+        <h3>Загрузка вопросов...</h3>
+      </div>
+    );
   }
 
   if (status === 'error') {
@@ -86,27 +89,33 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     return (
       <div className={styles.answerContainer}>
         <h2>Викторина завершена!</h2>
-        <p>Результат: {score} из {questions.length}</p>
-        <button onClick={restartQuiz} className={styles.button}>Сыграть ещё раз</button>
+        <p>Ваш результат: {score} из {questions.length}</p>
+        <button onClick={restartQuiz} className={styles.button}>Пройти ещё раз</button>
         <Link href="/" className={styles.secondaryButton}>На главную</Link>
       </div>
     );
   }
 
+  const currentQuestion = questions[currentIndex];
+
   return (
-    <div className={styles.answerContainer}>
+    <div className={`${styles.answerContainer} ${isImageQuiz ? styles.imageQuiz : ''}`}>
       <div className={styles.topContainer}>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
         <h2 className={styles.questionText}>{currentQuestion.question}</h2>
       </div>
 
-      {isImageQuestion ? (
+      {isImageQuiz ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
             let optionClass = styles.option;
+
             if (selectedIndex !== null) {
-              if (index === correctIndex) optionClass += ' ' + styles.correct;
-              else if (index === selectedIndex) optionClass += ' ' + styles.incorrect;
+              if (index === correctIndex) {
+                optionClass += ' ' + styles.correct;
+              } else if (index === selectedIndex && index !== correctIndex) {
+                optionClass += ' ' + styles.incorrect;
+              }
             }
 
             return (
@@ -119,7 +128,9 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
                   src={url}
                   alt={`Изображение ${index + 1}`}
                   className={styles.flagImage}
-                  onError={(e) => { e.currentTarget.src = '/default-flag.png'; }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/default-flag.png';
+                  }}
                 />
               </div>
             );

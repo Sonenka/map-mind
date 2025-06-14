@@ -3,5 +3,5 @@
 import BaseQuiz from './BaseQuiz';
 
 export default function CapitalsQuiz() {
-  return <BaseQuiz quizType="capitals" />;
+  return <BaseQuiz quizType="capitals" isImageQuiz={false} />;
 }

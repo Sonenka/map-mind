@@ -3,5 +3,5 @@
 import BaseQuiz from './BaseQuiz';
 
 export default function PhotosQuiz() {
-  return <BaseQuiz quizType="photos" />;
+  return <BaseQuiz quizType="photos" isImageQuiz={true} />;
 }
