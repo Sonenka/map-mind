@@ -2,38 +2,38 @@
 
 import { useState, useEffect } from 'react';
 import { Question } from './questions-table';
+import styles from './QuestionModal.module.css';
 
 type Props = {
   question: Question | null;
   onClose: () => void;
   onSaved: () => void;
-  type: string; 
+  type: string;
 };
 
 export function QuestionModal({ question, onClose, onSaved, type }: Props) {
   const [form, setForm] = useState({
     id: question?.id || crypto.randomUUID(),
     type: question?.type || type,
-    question: question?.question || '', 
-    options: ['', '', '', ''] as string[], // Явно указываем тип string[]
+    question: question?.question || '',
+    options: ['', '', '', ''] as string[],
     correct: question?.correct || '',
   });
 
   useEffect(() => {
     if (question) {
-      // Безопасное преобразование options в массив
-      const optionsArray = typeof question.options === 'string' 
-        ? question.options.split(';') 
-        : Array.isArray(question.options) 
-          ? question.options 
+      const optionsArray =
+        typeof question.options === 'string'
+          ? question.options.split(';')
+          : Array.isArray(question.options)
+          ? question.options
           : [];
-      
-      // Заполняем массив до 4 элементов пустыми строками
+
       const filledOptions = [...optionsArray.slice(0, 4)];
       while (filledOptions.length < 4) {
         filledOptions.push('');
       }
-      
+
       setForm({
         id: question.id,
         type: question.type,
@@ -51,13 +51,11 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
   };
 
   const handleSubmit = async () => {
-    // Проверяем, что все варианты заполнены
-    if (form.options.some(opt => !opt.trim())) {
+    if (form.options.some((opt) => !opt.trim())) {
       alert('Пожалуйста, заполните все варианты ответа');
       return;
     }
 
-    // Проверяем, что правильный ответ выбран из вариантов
     if (!form.options.includes(form.correct)) {
       alert('Правильный ответ должен совпадать с одним из вариантов');
       return;
@@ -65,7 +63,7 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
 
     const payload = {
       ...form,
-      options: form.options.join(';'), // Объединяем в строку для сохранения
+      options: form.options.join(';'),
     };
 
     const res = await fetch(`/api/questions/${type}`, {
@@ -82,57 +80,57 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
-        <h2 className="text-lg font-bold mb-4">
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>
           {question ? 'Редактировать вопрос' : 'Добавить вопрос'}
         </h2>
 
-        <div className="mb-2">
-          <label className="block mb-1">Тип</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Тип</label>
           <input
             type="text"
             value={form.type}
             disabled
-            className="w-full border p-2 rounded bg-gray-100 text-gray-600"
+            className={`${styles.input} ${styles.disabledInput}`}
           />
         </div>
 
-        <div className="mb-2">
-          <label className="block mb-1">Вопрос</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Вопрос</label>
           <input
             type="text"
             value={form.question}
             onChange={(e) => setForm({ ...form, question: e.target.value })}
-            className="w-full border p-2 rounded"
+            className={styles.input}
           />
         </div>
 
-        <div className="mb-2">
-          <label className="block mb-1">Варианты ответов</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Варианты ответов</label>
           {[0, 1, 2, 3].map((index) => (
-            <div key={index} className="mb-2">
+            <div key={index} className={styles.formGroup}>
               <input
                 type="text"
                 value={form.options[index] || ''}
                 onChange={(e) => handleOptionChange(index, e.target.value)}
-                className="w-full border p-2 rounded"
+                className={styles.input}
                 placeholder={`Вариант ${index + 1}`}
               />
             </div>
           ))}
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-1">Правильный ответ</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Правильный ответ</label>
           <select
             value={form.correct}
             onChange={(e) => setForm({ ...form, correct: e.target.value })}
-            className="w-full border p-2 rounded"
+            className={styles.input}
           >
             <option value="">Выберите правильный ответ</option>
             {form.options
-              .filter(opt => opt.trim())
+              .filter((opt) => opt.trim())
               .map((option, index) => (
                 <option key={index} value={option}>
                   {option}
@@ -141,9 +139,13 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
           </select>
         </div>
 
-        <div className="flex justify-end space-x-2">
-          <button onClick={onClose} className="px-4 py-2 border rounded">Отмена</button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded">Сохранить</button>
+        <div className={styles.buttonGroup}>
+          <button onClick={onClose} className={styles.cancelButton}>
+            Отмена
+          </button>
+          <button onClick={handleSubmit} className={styles.saveButton}>
+            Сохранить
+          </button>
         </div>
       </div>
     </div>
