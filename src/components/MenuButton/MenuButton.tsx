@@ -6,10 +6,20 @@ type Props = {
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;
+  variant?: 'default' | 'back';
 };
 
-export default function MenuButton({ href, children, disabled, className }: Props) {
-  const buttonClass = `${styles.button} ${className ?? ''}`;
+export default function MenuButton({
+  href,
+  children,
+  disabled,
+  className,
+  variant = 'default',
+}: Props) {
+  const buttonClass =
+    variant === 'default'
+      ? `${styles.button} ${className ?? ''}`
+      : className ?? '';
 
   if (disabled) {
     return <button disabled className={buttonClass}>{children}</button>;

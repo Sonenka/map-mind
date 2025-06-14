@@ -42,6 +42,7 @@ export default function Singleplayer() {
         <MenuButton
           href="/"
           className={styles.backLink}
+          variant='back'
         >
           ← Назад
         </MenuButton>
