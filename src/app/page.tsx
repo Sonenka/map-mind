@@ -25,21 +25,18 @@ export default function Home() {
         <div className={styles.menu}>
           <MenuButton
             href="/single"
-            className={`${styles.menuLink} ${styles.singleplayer}`}
           >
             Одиночная игра
           </MenuButton>
 
           <MenuButton
-            disabled
-            className={`${btnStyles.disabled}`}
+            variant="disabled"
           >
             Многопользовательская игра
           </MenuButton>
 
           <MenuButton
             href="/rating"
-            className={`${styles.menuLink} ${styles.ranking}`}
           >
             Рейтинг
           </MenuButton>

@@ -24,6 +24,9 @@
   padding: 30px 20px;
   text-align: center;
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
@@ -35,43 +38,5 @@
   display: grid;
   grid-template-columns: repeat(1fr, 1fr);
   gap: 20px;
-}
-
-.quizLink {
-  padding: 24px 32px;
-  border-radius: 100px;
-
-  border: 3px #64acff solid;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: 0.4s;
-  background-color: #449bff;
-
-  font-size: 28px;
-  height: 100px;
-
-  font-family: var(--font-play);
-}
-
-.quizLink:hover {
-  box-shadow: 7px 5px 56px -14px #a0cdff;
-}
-
-.quizLink:active {
-  transform: scale(0.97);
-  box-shadow: 7px 5px 56px -10px #449bff;
-  border: 3px #8cc2ff solid;
-}
-
-.backLink {
-  display: inline-block;
-  margin-top: 40px;
-  padding: 12px 24px;
-  background-color: #7f8c8d;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 1rem;
+  width: 100%;
 }

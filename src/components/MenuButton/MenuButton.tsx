@@ -4,26 +4,26 @@ import styles from './MenuButton.module.css';
 type Props = {
   href?: string;
   children: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  variant?: 'default' | 'back';
+  variant?: 'default' | 'back' | 'disabled';
 };
 
-export default function MenuButton({
-  href,
-  children,
-  disabled,
-  className,
-  variant = 'default',
-}: Props) {
-  const buttonClass =
-    variant === 'default'
-      ? `${styles.button} ${className ?? ''}`
-      : className ?? '';
+export default function MenuButton({ href, children, variant = 'default' }: Props) {
+  let className = '';
+  if (variant === 'default') className = styles.button;
+  else if (variant === 'back') className = styles.back;
+  else if (variant === 'disabled') className = styles.disabled;
 
-  if (disabled) {
-    return <button disabled className={buttonClass}>{children}</button>;
+  if (variant === 'disabled') {
+    return (
+      <button disabled className={className}>
+        {children}
+      </button>
+    );
   }
 
-  return <Link href={href!} className={buttonClass}>{children}</Link>;
+  return (
+    <Link href={href!} className={className}>
+      {children}
+    </Link>
+  );
 }

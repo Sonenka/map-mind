@@ -32,7 +32,6 @@ export default function Singleplayer() {
             <MenuButton
               key={quiz.id}
               href={`/quiz/${quiz.id}`}
-              className={styles.quizLink}
             >
               {quiz.name}
             </MenuButton>
@@ -41,7 +40,6 @@ export default function Singleplayer() {
 
         <MenuButton
           href="/"
-          className={styles.backLink}
           variant='back'
         >
           ← Назад
