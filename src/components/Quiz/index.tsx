@@ -109,6 +109,7 @@ export default function QuizGame({ quizType }: { quizType: string }) {
       {isImageQuestion ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
+            console.log(url);
             let optionClass = styles.option;
 
             if (selectedIndex !== null) {
