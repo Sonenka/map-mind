@@ -18,7 +18,7 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: linear-gradient(90deg, #000000,#162944,#070e18);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -41,7 +41,7 @@ a {
 }
 
 
-body, a, div {
+body, a, div, button {
   font-family: var(--font-play), sans-serif;
   margin: 0;
   padding: 0;

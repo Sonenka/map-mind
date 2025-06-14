@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './styles.module.css';
+import styles from './ProgressBar.module.css';
 
 export default function ProgressBar({
   current,
