@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -16,16 +17,17 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    if (res?.ok) {
-      router.push("/");
+    if (res?.error) {
+      setError("Неверный логин или пароль");
     } else {
-      alert("Login failed");
+      router.push("/"); // или куда хочешь
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h1>Вход</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <input
         type="email"
         placeholder="Email"
@@ -34,11 +36,11 @@ export default function LoginPage() {
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Пароль"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin}>Войти</button>
     </div>
   );
 }
