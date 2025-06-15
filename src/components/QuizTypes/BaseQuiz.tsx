@@ -13,11 +13,8 @@ type QuestionType = {
   correct: string;
 };
 
-const QUIZ_LENGTH = 10; // Количество вопросов в викторине
-
-export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, isImageQuiz: boolean }) {
-  const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
-  const [quizQuestions, setQuizQuestions] = useState<QuestionType[]>([]);
+export default function BaseQuiz({ quizType }: { quizType: string }) {
+  const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -25,11 +22,8 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
 
-  // Функция для выбора случайных вопросов
-  const getRandomQuestions = (questions: QuestionType[], count: number) => {
-    const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
+  const currentQuestion = questions[currentIndex];
+  const isImageQuestion = currentQuestion?.options?.[0]?.startsWith('http');
 
   useEffect(() => {
     setStatus('loading');
@@ -40,22 +34,13 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
       })
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Неверный формат данных');
-        
         const parsed = data.map((q) => ({
           ...q,
           options: typeof q.options === 'string'
             ? q.options.split(';').map((opt: string) => opt.trim())
             : q.options,
         }));
-
-        setAllQuestions(parsed);
-        
-        // Выбираем случайные вопросы только если их больше чем QUIZ_LENGTH
-        const questionsToUse = parsed.length > QUIZ_LENGTH 
-          ? getRandomQuestions(parsed, QUIZ_LENGTH)
-          : [...parsed];
-          
-        setQuizQuestions(questionsToUse);
+        setQuestions(parsed);
         setStatus('ready');
       })
       .catch((err) => {
@@ -68,9 +53,7 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
   const handleAnswer = (isCorrect: boolean, index: number) => {
     setSelectedIndex(index);
     setCorrectIndex(currentQuestion.options.findIndex(opt => opt === currentQuestion.correct));
-
     if (isCorrect) setScore((prev) => prev + 1);
-
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
       setSelectedIndex(null);
@@ -79,12 +62,6 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
   };
 
   const restartQuiz = () => {
-    // При перезапуске выбираем новые случайные вопросы
-    const newQuestions = allQuestions.length > QUIZ_LENGTH
-      ? getRandomQuestions(allQuestions, QUIZ_LENGTH)
-      : [...allQuestions];
-    
-    setQuizQuestions(newQuestions);
     setCurrentIndex(0);
     setScore(0);
     setSelectedIndex(null);
@@ -92,11 +69,7 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
   };
 
   if (status === 'loading') {
-    return (
-      <div className={styles.answerContainer}>
-        <h3>Загрузка вопросов...</h3>
-      </div>
-    );
+    return <div className={styles.answerContainer}><h3>Загрузка...</h3></div>;
   }
 
   if (status === 'error') {
@@ -109,37 +82,31 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
     );
   }
 
-  if (currentIndex >= quizQuestions.length) {
+  if (currentIndex >= questions.length) {
     return (
       <div className={styles.answerContainer}>
         <h2>Викторина завершена!</h2>
-        <p>Ваш результат: {score} из {quizQuestions.length}</p>
-        <button onClick={restartQuiz} className={styles.button}>Пройти ещё раз</button>
+        <p>Результат: {score} из {questions.length}</p>
+        <button onClick={restartQuiz} className={styles.button}>Сыграть ещё раз</button>
         <Link href="/" className={styles.secondaryButton}>На главную</Link>
       </div>
     );
   }
 
-  const currentQuestion = quizQuestions[currentIndex];
-
   return (
-    <div className={`${styles.answerContainer} ${isImageQuiz ? styles.imageQuiz : ''}`}>
+    <div className={styles.answerContainer}>
       <div className={styles.topContainer}>
-        <ProgressBar current={currentIndex + 1} total={quizQuestions.length} />
+        <ProgressBar current={currentIndex + 1} total={questions.length} />
         <h2 className={styles.questionText}>{currentQuestion.question}</h2>
       </div>
 
-      {isImageQuiz ? (
+      {isImageQuestion ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
             let optionClass = styles.option;
-
             if (selectedIndex !== null) {
-              if (index === correctIndex) {
-                optionClass += ' ' + styles.correct;
-              } else if (index === selectedIndex && index !== correctIndex) {
-                optionClass += ' ' + styles.incorrect;
-              }
+              if (index === correctIndex) optionClass += ' ' + styles.correct;
+              else if (index === selectedIndex) optionClass += ' ' + styles.incorrect;
             }
 
             return (
@@ -152,9 +119,7 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
                   src={url}
                   alt={`Изображение ${index + 1}`}
                   className={styles.flagImage}
-                  onError={(e) => {
-                    e.currentTarget.src = '/default-flag.png';
-                  }}
+                  onError={(e) => { e.currentTarget.src = '/default-flag.png'; }}
                 />
               </div>
             );

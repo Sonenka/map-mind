@@ -3,5 +3,5 @@
 import BaseQuiz from './BaseQuiz';
 
 export default function ContoursQuiz() {
-  return <BaseQuiz quizType="contours" isImageQuiz={true} />;
+  return <BaseQuiz quizType="contours" />;
 }
