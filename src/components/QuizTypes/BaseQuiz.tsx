@@ -13,14 +13,23 @@ type QuestionType = {
   correct: string;
 };
 
+const QUIZ_LENGTH = 10; // Количество вопросов в викторине
+
 export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, isImageQuiz: boolean }) {
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
+  const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
+  const [quizQuestions, setQuizQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [error, setError] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
+
+  // Функция для выбора случайных вопросов
+  const getRandomQuestions = (questions: QuestionType[], count: number) => {
+    const shuffled = [...questions].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
 
   useEffect(() => {
     setStatus('loading');
@@ -31,13 +40,22 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
       })
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Неверный формат данных');
+        
         const parsed = data.map((q) => ({
           ...q,
           options: typeof q.options === 'string'
             ? q.options.split(';').map((opt: string) => opt.trim())
             : q.options,
         }));
-        setQuestions(parsed);
+
+        setAllQuestions(parsed);
+        
+        // Выбираем случайные вопросы только если их больше чем QUIZ_LENGTH
+        const questionsToUse = parsed.length > QUIZ_LENGTH 
+          ? getRandomQuestions(parsed, QUIZ_LENGTH)
+          : [...parsed];
+          
+        setQuizQuestions(questionsToUse);
         setStatus('ready');
       })
       .catch((err) => {
@@ -61,6 +79,12 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
   };
 
   const restartQuiz = () => {
+    // При перезапуске выбираем новые случайные вопросы
+    const newQuestions = allQuestions.length > QUIZ_LENGTH
+      ? getRandomQuestions(allQuestions, QUIZ_LENGTH)
+      : [...allQuestions];
+    
+    setQuizQuestions(newQuestions);
     setCurrentIndex(0);
     setScore(0);
     setSelectedIndex(null);
@@ -85,23 +109,23 @@ export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, 
     );
   }
 
-  if (currentIndex >= questions.length) {
+  if (currentIndex >= quizQuestions.length) {
     return (
       <div className={styles.answerContainer}>
         <h2>Викторина завершена!</h2>
-        <p>Ваш результат: {score} из {questions.length}</p>
+        <p>Ваш результат: {score} из {quizQuestions.length}</p>
         <button onClick={restartQuiz} className={styles.button}>Пройти ещё раз</button>
         <Link href="/" className={styles.secondaryButton}>На главную</Link>
       </div>
     );
   }
 
-  const currentQuestion = questions[currentIndex];
+  const currentQuestion = quizQuestions[currentIndex];
 
   return (
     <div className={`${styles.answerContainer} ${isImageQuiz ? styles.imageQuiz : ''}`}>
       <div className={styles.topContainer}>
-        <ProgressBar current={currentIndex + 1} total={questions.length} />
+        <ProgressBar current={currentIndex + 1} total={quizQuestions.length} />
         <h2 className={styles.questionText}>{currentQuestion.question}</h2>
       </div>
 
