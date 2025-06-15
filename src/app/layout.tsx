@@ -19,6 +19,25 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
+export const metadata: Metadata = {
+  title: "MapMind — Играй и узнавай мир",
+  description: "Викторины по географии: столицы, флаги, фото стран. Играй в одиночку или в дуэли!",
+  keywords: ["география", "викторина", "квиз", "флаги", "столицы", "страны", "игра", "дуэль"],
+  authors: [{ name: "MapMind Team" }],
+  creator: "MapMind Team",
+  openGraph: {
+    title: "MapMind — Играй и узнавай мир",
+    description: "Открой мир через викторины: страны, флаги, столицы!",
+    // url: "https://your-quiz-app.com", 
+    siteName: "MapMind",
+    locale: "ru_RU",
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.png",
+  },
+};
+
 export default async function RootLayout({
   children,
 }: {
