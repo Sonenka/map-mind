@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ProgressBar from './ProgressBar';
+import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
-import OptionButton from '../OptionButton/OptionButton';  // импортируем новый компонент
+import OptionButton from '../OptionButton/OptionButton';
 import styles from './styles.module.css';
 
 type QuestionType = {
@@ -13,7 +13,7 @@ type QuestionType = {
   correct: string;
 };
 
-export default function QuizGame({ quizType }: { quizType: string }) {
+export default function BaseQuiz({ quizType }: { quizType: string }) {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -21,6 +21,9 @@ export default function QuizGame({ quizType }: { quizType: string }) {
   const [error, setError] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
+
+  const currentQuestion = questions[currentIndex];
+  const isImageQuestion = currentQuestion?.options?.[0]?.startsWith('http');
 
   useEffect(() => {
     setStatus('loading');
@@ -50,9 +53,7 @@ export default function QuizGame({ quizType }: { quizType: string }) {
   const handleAnswer = (isCorrect: boolean, index: number) => {
     setSelectedIndex(index);
     setCorrectIndex(currentQuestion.options.findIndex(opt => opt === currentQuestion.correct));
-
     if (isCorrect) setScore((prev) => prev + 1);
-
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
       setSelectedIndex(null);
@@ -68,11 +69,7 @@ export default function QuizGame({ quizType }: { quizType: string }) {
   };
 
   if (status === 'loading') {
-    return (
-      <div className={styles.answerContainer}>
-        <h3>Загрузка вопросов...</h3>
-      </div>
-    );
+    return <div className={styles.answerContainer}><h3>Загрузка...</h3></div>;
   }
 
   if (status === 'error') {
@@ -89,15 +86,12 @@ export default function QuizGame({ quizType }: { quizType: string }) {
     return (
       <div className={styles.answerContainer}>
         <h2>Викторина завершена!</h2>
-        <p>Ваш результат: {score} из {questions.length}</p>
-        <button onClick={restartQuiz} className={styles.button}>Пройти ещё раз</button>
+        <p>Результат: {score} из {questions.length}</p>
+        <button onClick={restartQuiz} className={styles.button}>Сыграть ещё раз</button>
         <Link href="/" className={styles.secondaryButton}>На главную</Link>
       </div>
     );
   }
-
-  const currentQuestion = questions[currentIndex];
-  const isImageQuestion = currentQuestion.options[0]?.startsWith('http');
 
   return (
     <div className={styles.answerContainer}>
@@ -109,15 +103,10 @@ export default function QuizGame({ quizType }: { quizType: string }) {
       {isImageQuestion ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
-            console.log(url);
             let optionClass = styles.option;
-
             if (selectedIndex !== null) {
-              if (index === correctIndex) {
-                optionClass += ' ' + styles.correct;
-              } else if (index === selectedIndex && index !== correctIndex) {
-                optionClass += ' ' + styles.incorrect;
-              }
+              if (index === correctIndex) optionClass += ' ' + styles.correct;
+              else if (index === selectedIndex) optionClass += ' ' + styles.incorrect;
             }
 
             return (
@@ -128,11 +117,9 @@ export default function QuizGame({ quizType }: { quizType: string }) {
               >
                 <img
                   src={url}
-                  alt={`Флаг ${index + 1}`}
+                  alt={`Изображение ${index + 1}`}
                   className={styles.flagImage}
-                  onError={(e) => {
-                    e.currentTarget.src = '/default-flag.png';
-                  }}
+                  onError={(e) => { e.currentTarget.src = '/default-flag.png'; }}
                 />
               </div>
             );
