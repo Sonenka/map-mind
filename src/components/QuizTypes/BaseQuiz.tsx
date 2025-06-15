@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ProgressBar from './ProgressBar';
+import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
-import OptionButton from '../OptionButton/OptionButton';  // импортируем новый компонент
+import OptionButton from '../OptionButton/OptionButton';
 import styles from './styles.module.css';
 
 type QuestionType = {
@@ -13,7 +13,7 @@ type QuestionType = {
   correct: string;
 };
 
-export default function QuizGame({ quizType }: { quizType: string }) {
+export default function BaseQuiz({ quizType, isImageQuiz }: { quizType: string, isImageQuiz: boolean }) {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -97,19 +97,17 @@ export default function QuizGame({ quizType }: { quizType: string }) {
   }
 
   const currentQuestion = questions[currentIndex];
-  const isImageQuestion = currentQuestion.options[0]?.startsWith('http');
 
   return (
-    <div className={styles.answerContainer}>
+    <div className={`${styles.answerContainer} ${isImageQuiz ? styles.imageQuiz : ''}`}>
       <div className={styles.topContainer}>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
         <h2 className={styles.questionText}>{currentQuestion.question}</h2>
       </div>
 
-      {isImageQuestion ? (
+      {isImageQuiz ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
-            console.log(url);
             let optionClass = styles.option;
 
             if (selectedIndex !== null) {
@@ -128,7 +126,7 @@ export default function QuizGame({ quizType }: { quizType: string }) {
               >
                 <img
                   src={url}
-                  alt={`Флаг ${index + 1}`}
+                  alt={`Изображение ${index + 1}`}
                   className={styles.flagImage}
                   onError={(e) => {
                     e.currentTarget.src = '/default-flag.png';
