@@ -1,7 +1,8 @@
 /* styles.module.css */
-.body {
+/* .body {
   height: 100vh;
-}
+  background: linear-gradient(90deg, #000000,#162944,#070e18);
+} */
 
 .answerContainer {
   max-width: 700px;
