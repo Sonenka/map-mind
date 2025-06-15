@@ -21,13 +21,17 @@ const nunito = Nunito({
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
+
   return (
-    <html lang="en" className={`${play.variable} ${nunito.variable}`}>
+    <html lang="ru">
       <body>
-        {children}
+        <SessionProviderWrapper session={session}>
+          {children}
+        </SessionProviderWrapper>
       </body>
     </html>
   );
