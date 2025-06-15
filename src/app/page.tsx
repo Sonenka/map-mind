@@ -1,5 +1,4 @@
 import styles from './styles.module.css';
-import btnStyles from '../components/MenuButton/MenuButton.module.css';
 import MenuButton from '@/components/MenuButton/MenuButton'; // или укажи относительный путь
 
 export default function Home() {

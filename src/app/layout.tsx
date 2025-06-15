@@ -27,7 +27,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="ru">
+    <html lang="ru" className={`${play.variable} ${nunito.variable}`}>
       <body>
         <SessionProviderWrapper session={session}>
           {children}
