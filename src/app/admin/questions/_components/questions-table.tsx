@@ -1,5 +1,3 @@
-import styles from './QuestionsTable.module.css';
-
 export type Question = {
   id: string;
   type: string;
@@ -16,30 +14,30 @@ type Props = {
 
 export function QuestionsTable({ questions, onEdit, onDelete }: Props) {
   return (
-    <table className={styles.table}>
+    <table className="w-full border">
       <thead>
         <tr>
-          <th className={styles.th}>Тип</th>
-          <th className={styles.th}>Вопрос</th>
-          <th className={styles.th}>Варианты</th>
-          <th className={styles.th}>Ответ</th>
-          <th className={styles.th}>Действия</th>
+          <th className="border px-2 py-1">Тип</th>
+          <th className="border px-2 py-1">Вопрос</th>
+          <th className="border px-2 py-1">Варианты</th>
+          <th className="border px-2 py-1">Ответ</th>
+          <th className="border px-2 py-1">Действия</th>
         </tr>
       </thead>
       <tbody>
         {questions.map((q: Question) => (
           <tr key={q.id}>
-            <td className={styles.td}>{q.type}</td>
-            <td className={styles.td}>{q.question}</td>
-            <td className={`${styles.td} ${styles.options}`}> {/* <- белый текст */}
+            <td className="border px-2 py-1">{q.type}</td>
+            <td className="border px-2 py-1">{q.question}</td>
+            <td className="border px-2 py-1">
               {Array.isArray(q.options) ? q.options.join(', ') : String(q.options)}
             </td>
-            <td className={styles.td}>{q.correct}</td>
-            <td className={styles.td}>
-              <button onClick={() => onEdit(q)} className={styles.editBtn}>
+            <td className="border px-2 py-1">{q.correct}</td>
+            <td className="border px-2 py-1 space-x-2">
+              <button onClick={() => onEdit(q)} className="text-blue-600 underline">
                 Редактировать
               </button>
-              <button onClick={() => onDelete(q.id)} className={styles.deleteBtn}>
+              <button onClick={() => onDelete(q.id)} className="text-red-600 underline">
                 Удалить
               </button>
             </td>
