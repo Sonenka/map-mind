@@ -14,6 +14,7 @@ type QuestionType = {
 };
 
 export default function BaseQuiz({ quizType }: { quizType: string }) {
+  const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -40,7 +41,13 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
             ? q.options.split(';').map((opt: string) => opt.trim())
             : q.options,
         }));
-        setQuestions(parsed);
+        setAllQuestions(parsed);
+        
+        // Выбираем 10 случайных вопросов
+        const shuffled = [...parsed].sort(() => 0.5 - Math.random());
+        const selectedQuestions = shuffled.slice(0, 10);
+        setQuestions(selectedQuestions);
+        
         setStatus('ready');
       })
       .catch((err) => {
@@ -62,6 +69,11 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   };
 
   const restartQuiz = () => {
+    // При перезапуске снова выбираем 10 случайных вопросов
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    const selectedQuestions = shuffled.slice(0, 10);
+    setQuestions(selectedQuestions);
+    
     setCurrentIndex(0);
     setScore(0);
     setSelectedIndex(null);
