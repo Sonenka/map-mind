@@ -15,9 +15,9 @@ export default function AdminDashboard() {
           href="/admin/questions"
         />
         <AdminCard 
-          title="Статистика" 
-          description="Просмотр статистики пользователей"
-          href="/admin/stats"
+          title="Управление пользователями" 
+          description="Добавление, редактирование и удаление пользователей"
+          href="/admin/users"
         />
       </div>
     </div>

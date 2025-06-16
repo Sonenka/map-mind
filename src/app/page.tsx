@@ -1,9 +1,14 @@
+'use client';
+
 import styles from './styles.module.css';
-import MenuButton from '@/components/MenuButton/MenuButton'; // или укажи относительный путь
+import MenuButton from '@/components/MenuButton/MenuButton';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
-  return (
+  const { data: session } = useSession();
 
+  return (
     <div className={styles.container}>
       <video
         autoPlay
@@ -19,24 +24,29 @@ export default function Home() {
       <div className={styles.overlay} />
 
       <div className={styles.content}>
+        {/* Добавляем кнопку профиля в правый верхний угол */}
+        <div className={styles.profileButtonContainer}>
+          <Link href="/profile" className={styles.profileButton}>
+            {session ? (
+              <span className={styles.profileIcon}>👤</span>
+            ) : (
+              <span className={styles.profileIcon}>🔒</span>
+            )}
+          </Link>
+        </div>
+
         <h1 className={styles.title}>MapMind</h1>
 
         <div className={styles.menu}>
-          <MenuButton
-            href="/single"
-          >
+          <MenuButton href="/single">
             Одиночная игра
           </MenuButton>
 
-          <MenuButton
-            variant="disabled"
-          >
+          <MenuButton variant="disabled">
             Многопользовательская игра
           </MenuButton>
 
-          <MenuButton
-            href="/rating"
-          >
+          <MenuButton href="/rating">
             Рейтинг
           </MenuButton>
         </div>

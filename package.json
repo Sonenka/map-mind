@@ -11,7 +11,8 @@
     "seed": "ts-node seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.8.2",
+    "@auth/prisma-adapter": "^2.9.1",
+    "@prisma/client": "^6.9.0",
     "axios": "^1.9.0",
     "csv-parse": "^5.6.0",
     "csv-stringify": "^6.5.2",
@@ -19,11 +20,13 @@
     "framer-motion": "^12.14.0",
     "fs": "^0.0.1-security",
     "next": "15.3.2",
+    "next-auth": "^4.24.11",
     "path": "^0.12.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

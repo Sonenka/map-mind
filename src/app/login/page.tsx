@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -46,6 +47,9 @@ export default function LoginPage() {
       <button className={styles.button} onClick={handleLogin}>
         Войти
       </button>
+      <p className={styles.registerLink}>
+        Еще нет аккаунта? <Link href="/register">Зарегистрируйтесь</Link>
+      </p>
     </div>
   );
 }

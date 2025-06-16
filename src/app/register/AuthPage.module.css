@@ -52,3 +52,47 @@
   margin-bottom: 16px;
   text-align: center;
 }
+
+.passwordContainer {
+  position: relative;
+  width: 100%;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.toggleButton:hover {
+  color: #333;
+}
+
+.error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.loginPrompt {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #666;
+}
+
+.loginLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
