@@ -1,8 +1,4 @@
 /* styles.module.css */
-/* .body {
-  height: 100vh;
-  background: linear-gradient(90deg, #000000,#162944,#070e18);
-} */
 
 .answerContainer {
   max-width: 700px;
@@ -17,7 +13,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  height: 70vh;
+  min-height: 70vh;
+  height: min-content;
   width: 70vw;
 
   display: flex;
@@ -69,20 +66,22 @@
 
 .imageOptions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   justify-items: center;
   margin-top: 1rem;
 }
 
 .flagImage {
-  width: 100px;
-  height: 60px;
+  width: 70%;
+  height: auto;
   object-fit: cover;
   border: 2px solid #ccc;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s ease;
+
 }
 
 .flagImage:hover {
