@@ -5,13 +5,7 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
 import OptionButton from '../OptionButton/OptionButton';
 import styles from './styles.module.css';
-
-type QuestionType = {
-  id: string;
-  question: string;
-  options: string[];
-  correct: string;
-};
+import { QuestionType } from '../../lib/types';
 
 export default function BaseQuiz({ quizType }: { quizType: string }) {
   const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
@@ -24,7 +18,7 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
 
   const currentQuestion = questions[currentIndex];
-  const isImageQuestion = currentQuestion?.options?.[0]?.startsWith('http');
+  const isImageAnswers = currentQuestion?.options?.[0]?.startsWith('http');
 
   useEffect(() => {
     setStatus('loading');
@@ -35,19 +29,14 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
       })
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Неверный формат данных');
-        const parsed = data.map((q) => ({
+        const parsed = data.map((q: any) => ({
           ...q,
           options: typeof q.options === 'string'
             ? q.options.split(';').map((opt: string) => opt.trim())
             : q.options,
         }));
         setAllQuestions(parsed);
-        
-        // Выбираем 10 случайных вопросов
-        const shuffled = [...parsed].sort(() => 0.5 - Math.random());
-        const selectedQuestions = shuffled.slice(0, 10);
-        setQuestions(selectedQuestions);
-        
+        setQuestions(parsed.sort(() => 0.5 - Math.random()).slice(0, 10));
         setStatus('ready');
       })
       .catch((err) => {
@@ -69,11 +58,8 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   };
 
   const restartQuiz = () => {
-    // При перезапуске снова выбираем 10 случайных вопросов
     const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-    const selectedQuestions = shuffled.slice(0, 10);
-    setQuestions(selectedQuestions);
-    
+    setQuestions(shuffled.slice(0, 10));
     setCurrentIndex(0);
     setScore(0);
     setSelectedIndex(null);
@@ -109,10 +95,31 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     <div className={styles.answerContainer}>
       <div className={styles.topContainer}>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
-        <h2 className={styles.questionText}>{currentQuestion.question}</h2>
+        {currentQuestion.question?.startsWith('http') ? (
+          <div className={styles.imageWrapper}>
+            <img
+              src={currentQuestion.image ?? currentQuestion.question}
+              alt="Изображение вопроса"
+              className={styles.questionImage}
+              onError={(e) => { e.currentTarget.src = '/default.png'; }}
+            />
+          </div>
+        ) : currentQuestion.question && (
+          <h2 className={styles.questionText}>{currentQuestion.question}</h2>
+        )}
+        {currentQuestion.image && (
+          <div className={styles.imageWrapper}>
+            <img
+              src={currentQuestion.image}
+              alt="Изображение вопроса"
+              className={styles.questionImage}
+              onError={(e) => { e.currentTarget.src = '/default.png'; }}
+            />
+          </div>
+        )}
       </div>
 
-      {isImageQuestion ? (
+      {isImageAnswers ? (
         <div className={styles.imageOptions}>
           {currentQuestion.options.map((url, index) => {
             let optionClass = styles.option;
