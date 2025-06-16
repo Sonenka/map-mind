@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        name: { label: "Name", type: "name{" },
+        name: { label: "Name", type: "name" },
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
@@ -33,4 +33,19 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+  async session({ session, token, user }) {
+    // Обновляем сессию из БД при каждом запросе
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
+    
+    if (dbUser) {
+      session.user.name = dbUser.name;
+      session.user.email = dbUser.email;
+    }
+    
+    return session;
+  }
+}
 };
