@@ -19,6 +19,28 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
+export const metadata: Metadata = {
+  title: "MapMind — Играй и узнавай мир",
+  description: "Викторины по географии: столицы, флаги, фото стран. Играй в одиночку или в дуэли!",
+  keywords: ["география", "викторина", "квиз", "флаги", "столицы", "страны", "игра", "дуэль"],
+  authors: [{ name: "MapMind Team" }],
+  creator: "MapMind Team",
+  openGraph: {
+    title: "MapMind — Играй и узнавай мир",
+    description: "Открой мир через викторины: страны, флаги, столицы!",
+    // url: "https://your-quiz-app.com", 
+    siteName: "MapMind",
+    locale: "ru_RU",
+    type: "website",
+  },
+  icons: {
+    icon: [
+      // { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+  },
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -27,7 +49,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="ru">
+    <html lang="ru" className={`${play.variable} ${nunito.variable}`}>
       <body>
         <SessionProviderWrapper session={session}>
           {children}
