@@ -1,23 +1,22 @@
 .adminContainer {
-  padding: 24px;
+  padding: 32px;
   max-width: 1200px;
   margin: 0 auto;
-  color: white;
+  color: #1a1a1a;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .adminTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 24px;
-  color: #1a1a1a;
-  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: #2c3e50;
 }
 
 .adminGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  color: white;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
 .adminCardLink {
@@ -26,206 +25,29 @@
 }
 
 .adminCard {
+  background-color: #ffffff;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
-  transition: background-color 0.2s ease;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .adminCard:hover {
-  background-color: #f5f5f5;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  background-color: #f9f9f9;
 }
 
 .adminCardTitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  color: #2c3e50;
 }
 
 .adminCardDescription {
   color: #666;
-  margin: 0;
-}
-
-.questionsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.addButton {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
-}
-
-.addButton:hover {
-  background-color: #45a049;
-}
-
-.tableContainer {
-  overflow-x: auto;
-  margin-top: 16px;
-}
-
-.questionsTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.questionsTable th,
-.questionsTable td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.questionsTable th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-}
-
-.actionsCell {
-  display: flex;
-  gap: 8px;
-}
-
-.editButton {
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.deleteButton {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.editButton:hover {
-  background-color: #0b7dda;
-}
-
-.deleteButton:hover {
-  background-color: #da190b;
-}
-
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modalContent {
-  background-color: white;
-  padding: 24px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modalTitle {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #1a1a1a;
-}
-
-.modalForm {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.formLabel {
-  font-weight: 600;
-  color: #333;
-}
-
-.formInput,
-.formSelect,
-.formTextarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.formTextarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.modalButtons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.cancelButton {
-  background-color: #f5f5f5;
-  color: #333;
-  border: 1px solid #ddd;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.submitButton {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.cancelButton:hover {
-  background-color: #e0e0e0;
-}
-
-.submitButton:hover {
-  background-color: #45a049;
-}
-
-.imagePreview {
-  max-width: 100%;
-  max-height: 150px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.typeSelect {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-right: 16px;
+  line-height: 1.4;
 }

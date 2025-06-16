@@ -17,6 +17,7 @@ body {
 }
 
 body {
+  background-color: #162944;
   color: var(--foreground);
   background: linear-gradient(90deg, #000000,#162944,#070e18);
   -webkit-font-smoothing: antialiased;
@@ -34,11 +35,11 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-}
+} */
 
 
 body, a, div, button {
