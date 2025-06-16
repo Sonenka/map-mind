@@ -52,3 +52,17 @@
   margin-bottom: 16px;
   text-align: center;
 }
+
+.registerLink {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.registerLink a {
+  color: #0070f3; /* Или любой другой цвет */
+  text-decoration: none; /* Убирает подчеркивание */
+}
+
+.registerLink a:hover {
+  text-decoration: underline; /* Добавляет подчеркивание при наведении */
+}

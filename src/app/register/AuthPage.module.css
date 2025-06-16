@@ -78,3 +78,21 @@
   color: red;
   margin-bottom: 1rem;
 }
+
+.loginPrompt {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #666;
+}
+
+.loginLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}

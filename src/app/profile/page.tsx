@@ -1,10 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "./AuthPage.module.css";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const { data: session, status, update } = useSession();
   const [name, setName] = useState("");
   const [newName, setNewName] = useState("");
@@ -30,49 +33,49 @@ export default function ProfilePage() {
     }
   }, [session]);
 
-  const handleNameUpdate = async () => {
-    if (!newName.trim()) {
-      setError("Имя не может быть пустым");
-      return;
-    }
+  const handleNameUpdate = () => {
+  if (!newName.trim()) {
+    setError("Имя не может быть пустым");
+    return;
+  }
 
-    try {
-      const res = await fetch("/api/profile/update-name", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: newName }),
-      });
-
+  fetch("/api/profile/update-name", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: newName }),
+  })
+    .then((res) => {
       if (res.ok) {
-        // Обновляем сессию и ждем завершения
-        await update({ 
-          name: newName,
-          // Добавляем другие поля сессии, если нужно
-          email: session?.user?.email 
-        });
-        
-        // Принудительно обновляем состояние
         setName(newName);
         setIsEditingName(false);
         setSuccess("Имя успешно обновлено");
-        await refreshSession();
-        setTimeout(() => setSuccess(""), 3000);
-        
-        // Добавляем принудительный рефетч сессии
-        const newSession = await fetch("/api/auth/session").then(res => res.json());
-        await update(newSession);
-        
+
+        return fetch("/api/auth/session")
+          .then(res => res.json())
+          .then(sessionData => {
+            return update({
+              ...sessionData,
+              user: {
+                ...sessionData.user,
+                name: newName
+              }
+            });
+          })
+          .then(() => {
+          });
       } else {
-        const errorData = await res.json();
-        setError(errorData.message || "Ошибка при обновлении имени");
+        return res.json().then(errorData => {
+          setError(errorData.message || "Ошибка при обновлении имени");
+        });
       }
-    } catch (err) {
+    })
+    .catch((err) => {
       console.error("Update error:", err);
       setError("Произошла ошибка при соединении с сервером");
-    }
-  };
+    });
+};
 
   const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -137,7 +140,30 @@ export default function ProfilePage() {
   };
 
   if (status === "loading") return <p className={styles.title}>Загрузка...</p>;
-  if (!session) return <p className={styles.title}>Пожалуйста, войдите</p>;
+  if (!session) {
+    return (
+      <div className={styles.container}>
+        <h1 className={styles.title}>Профиль</h1>
+        <p className={styles.authMessage}>Пожалуйста, войдите в аккаунт</p>
+        
+        <div className={styles.authButtons}>
+          <button 
+            onClick={() => router.push('/login')} 
+            className={styles.authButton}
+          >
+            Есть аккаунт? Войти
+          </button>
+          
+          <button 
+            onClick={() => router.push('/register')} 
+            className={styles.secondaryAuthButton}
+          >
+            Нет аккаунта? Зарегистрироваться
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

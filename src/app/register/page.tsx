@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./AuthPage.module.css";
 
 export default function RegisterPage() {
@@ -117,6 +118,13 @@ export default function RegisterPage() {
       <button className={styles.button} onClick={handleRegister}>
         Зарегистрироваться
       </button>
+
+      <div className={styles.loginPrompt}>
+        <p>Уже зарегистрированы?</p>
+        <Link href="/login" className={styles.loginLink}>
+          Войдите в аккаунт
+        </Link>
+      </div>
     </div>
   );
 }
