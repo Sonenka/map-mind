@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
+        name: { label: "Name", type: "name{" },
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
@@ -24,7 +25,7 @@ export const authOptions: NextAuthOptions = {
 
         if (credentials.password !== user.password) return null;
 
-        return { id: user.id, email: user.email };
+        return { id: user.id, name: user.name, email: user.email };
       }
     }),
   ],

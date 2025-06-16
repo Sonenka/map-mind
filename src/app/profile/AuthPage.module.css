@@ -52,3 +52,76 @@
   margin-bottom: 16px;
   text-align: center;
 }
+
+.profileSection {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.editField {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.passwordSection {
+  margin-top: 1rem;
+}
+
+.passwordContainer {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.smallButton {
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.smallButton:hover {
+  background-color: #005bb5;
+}
+
+.secondarySmallButton {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.secondarySmallButton:hover {
+  background-color: #ddd;
+}
+
+.dangerButton {
+  padding: 0.5rem 1rem;
+  background-color: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dangerButton:hover {
+  background-color: #cc0000;
+}
+
+.success {
+  color: green;
+  margin-bottom: 1rem;
+}
