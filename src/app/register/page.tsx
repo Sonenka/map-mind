@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./AuthPage.module.css";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [error, setError] = useState("");
 
   const handleRegister = async () => {
     const res = await fetch("/api/register", {
@@ -20,26 +22,31 @@ export default function RegisterPage() {
     if (res.ok) {
       router.push("/login");
     } else {
-      alert("Ошибка регистрации");
+      setError("Ошибка регистрации");
     }
   };
 
   return (
-    <div>
-      <h1>Регистрация</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Регистрация</h1>
+      {error && <p className={styles.error}>{error}</p>}
       <input
         type="email"
         placeholder="Email"
         value={email}
+        className={styles.input}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
         placeholder="Пароль"
         value={password}
+        className={styles.input}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleRegister}>Зарегистрироваться</button>
+      <button className={styles.button} onClick={handleRegister}>
+        Зарегистрироваться
+      </button>
     </div>
   );
 }
