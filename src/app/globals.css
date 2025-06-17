@@ -17,9 +17,9 @@ body {
 }
 
 body {
-  background-color: pink;
+  background-color: black;
   color: var(--foreground);
-  /* background: linear-gradient(90deg, #000000,#162944,#070e18); */
+  background: linear-gradient(90deg, #000000,#162944,#070e18);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
