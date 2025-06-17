@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import styles from "./AuthPage.module.css";
+import styles from "../auth.module.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -48,7 +48,7 @@ export default function LoginPage() {
         Войти
       </button>
       <p className={styles.registerLink}>
-        Еще нет аккаунта? <Link href="/register">Зарегистрируйтесь</Link>
+        Еще нет аккаунта? <Link href="/auth/register">Зарегистрируйтесь</Link>
       </p>
     </div>
   );

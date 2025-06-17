@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
-import styles from "./AuthPage.module.css";
+import styles from "../auth.module.css";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
@@ -148,14 +148,14 @@ export default function ProfilePage() {
         
         <div className={styles.authButtons}>
           <button 
-            onClick={() => router.push('/login')} 
+            onClick={() => router.push('/auth/login')} 
             className={styles.authButton}
           >
             Есть аккаунт? Войти
           </button>
           
           <button 
-            onClick={() => router.push('/register')} 
+            onClick={() => router.push('/auth/register')} 
             className={styles.secondaryAuthButton}
           >
             Нет аккаунта? Зарегистрироваться

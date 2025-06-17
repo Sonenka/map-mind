@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import styles from "./AuthPage.module.css";
+import styles from "../auth.module.css";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
       <div className={styles.loginPrompt}>
         <p>Уже зарегистрированы?</p>
-        <Link href="/login" className={styles.loginLink}>
+        <Link href="/auth/login" className={styles.loginLink}>
           Войдите в аккаунт
         </Link>
       </div>

@@ -53,6 +53,20 @@
   text-align: center;
 }
 
+.registerLink {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.registerLink a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.registerLink a:hover {
+  text-decoration: underline;
+}
+
 .profileSection {
   margin-bottom: 2rem;
   padding: 1rem;
@@ -74,6 +88,7 @@
 .passwordContainer {
   position: relative;
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .buttonGroup {
@@ -167,4 +182,38 @@
 
 .secondaryAuthButton:hover {
   background-color: #e0e0e0;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.toggleButton:hover {
+  color: #333;
+}
+
+.loginPrompt {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #666;
+}
+
+.loginLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
 }
