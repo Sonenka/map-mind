@@ -1,35 +1,38 @@
-const { PrismaClient } = require('@prisma/client')
-
 const { Server } = require("socket.io");
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
-const questions = await prisma.question.findMany();
-
-
-
 const io = new Server(4000, {
   cors: {
     origin: "*",
   },
 });
-rooms[roomId] = {
-  players: new Set([socket.id]),
-  questions: questions,
-  current: 0
-};
+
+const rooms = {}; // roomId -> { players: Set, questions: [], currentQuestionIndex: 0 }
+
+// Функция проверки правильности ответа
+async function checkAnswer(questionId, answer) {
+  try {
+    const question = await prisma.question.findUnique({
+      where: { id: questionId },
+      select: { correct: true }
+    });
+    return question?.correct === answer;
+  } catch (error) {
+    console.error("Error checking answer:", error);
+    return false;
+  }
+}
 
 io.on("connection", (socket) => {
   console.log("✅ Новый клиент:", socket.id);
 
-  socket.on("join", (roomId, callback) => {
-    try {
-      if (!rooms[roomId]) {
-        // Загружаем вопросы из базы данных при создании комнаты
-        const questions = prisma.question.findMany({
-          take: 10, // Берем 10 случайных вопросов
-          orderBy: {
-            id: 'desc' // Или другой порядок
-          },
+  socket.on("join", async (roomId, callback) => {
+    if (!rooms[roomId]) {
+      try {
+        // Загружаем вопросы из базы данных
+        const questions = await prisma.question.findMany({
+          where: {  }, // или другой тип викторины
+          take: 10,
           select: {
             id: true,
             question: true,
@@ -37,97 +40,103 @@ io.on("connection", (socket) => {
             correct: true
           }
         });
-        
+
         rooms[roomId] = {
           players: new Set(),
           questions: questions,
           currentQuestionIndex: 0
         };
+      } catch (err) {
+        console.error("Error loading questions:", err);
+        callback({ success: false, message: "Ошибка загрузки вопросов" });
+        return;
       }
-      if (!rooms[roomId]) {
-    callback({ success: false, message: "Комната не существует" });
-    return;
-  }
-      if (rooms[roomId].players.size >= 2) {
-        callback({ success: false, message: "Комната заполнена" });
+    }
+
+    if (rooms[roomId].players.size >= 2) {
+      callback({ success: false, message: "Комната заполнена" });
+      return;
+    }
+
+    rooms[roomId].players.add(socket.id);
+    socket.join(roomId);
+
+    callback({ 
+      success: true, 
+      message: "Успешное подключение",
+      currentQuestion: rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
+    });
+
+    // Отправляем обновленный список игроков
+    const players = Array.from(rooms[roomId].players);
+    io.to(roomId).emit("player-joined", players);
+    
+    // Отправляем текущий вопрос
+    io.to(roomId).emit("new-question", 
+      rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
+    );
+  });
+
+  // Обработчик ответов от клиентов
+  socket.on("answer", async (data) => {
+    try {
+      const { roomId, answer, questionId } = data;
+      const room = rooms[roomId];
+      
+      if (!room) {
+        console.log("Комната не найдена");
         return;
       }
 
-      rooms[roomId].players.add(socket.id);
-      socket.join(roomId);
+      // Проверяем правильность ответа
+      const isCorrect = await checkAnswer(questionId, answer);
       
-      callback({ 
-        success: true, 
-        message: "Успешное подключение",
-        currentQuestion: rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
+      // Отправляем ответ всем в комнате
+      io.to(roomId).emit("answer", { 
+        playerId: socket.id, 
+        answer,
+        isCorrect,
+        questionId
       });
 
-      // Отправляем обновленный список игроков
-      const players = Array.from(rooms[roomId].players);
-      io.to(roomId).emit("player-joined", players);
-      
-      // Отправляем текущий вопрос всем игрокам
-      io.to(roomId).emit("new-question", 
-        rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
-      );
-    } catch (err) {
-      console.error("Ошибка при подключении к комнате:", err);
-      callback({ success: false, message: "Ошибка сервера" });
+      // Проверяем, ответили ли все игроки
+      moveToNextQuestion(roomId);
+    } catch (error) {
+      console.error("Error handling answer:", error);
     }
   });
 
-  socket.on("set-questions", ({ roomId, questions }) => {
-  if (rooms[roomId]) {
-    rooms[roomId].questions = questions;
-    rooms[roomId].currentQuestionIndex = 0;
-    // Рассылаем вопросы всем участникам комнаты
-    io.to(roomId).emit("receive-questions", questions);
-  }
-});
-
-  socket.on("answer", (data) => {
-    const { roomId, answer, questionId } = data;
-    const room = rooms[roomId];
-    
-    // Проверяем правильность ответа
-    const currentQuestion = room.questions[room.currentQuestionIndex];
-    const isCorrect = currentQuestion.correct === answer;
-    
-    io.to(roomId).emit("answer", { 
-      playerId: socket.id, 
-      answer,
-      isCorrect
-    });
-  });
-
-socket.on("next-question", ({ roomId, index }) => {
-  if (rooms[roomId]) {
-    rooms[roomId].currentQuestionIndex = index;
-    io.to(roomId).emit("next-question", index);
-  }
-});
-
   socket.on("disconnect", () => {
     for (const roomId in rooms) {
-      if (rooms[roomId].has(socket.id)) {
-        rooms[roomId].delete(socket.id);
+      if (rooms[roomId].players.has(socket.id)) {
+        rooms[roomId].players.delete(socket.id);
         console.log(`❌ ${socket.id} покинул комнату ${roomId}`);
 
-        if (rooms[roomId].size === 0) {
+        if (rooms[roomId].players.size === 0) {
           delete rooms[roomId];
         } else {
-          const players = Array.from(rooms[roomId]);
+          const players = Array.from(rooms[roomId].players);
           io.to(roomId).emit("player-joined", players);
         }
-
         break;
       }
     }
   });
+});
 
-  socket.on("game-over", (roomId) => {
-  io.to(roomId).emit("game-over");
-});
-});
+
+// Переход к следующему вопросу
+function moveToNextQuestion(roomId) {
+  const room = rooms[roomId];
+  if (!room) return;
+
+  room.currentQuestionIndex++;
+  
+  if (room.currentQuestionIndex < room.questions.length) {
+    io.to(roomId).emit("new-question", room.questions[room.currentQuestionIndex]);
+  } else {
+    io.to(roomId).emit("game-over");
+  }
+}
 
 console.log("🚀 Socket сервер запущен на порту 4000");

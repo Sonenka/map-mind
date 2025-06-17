@@ -14,7 +14,7 @@ type Question = {
 export default function RoomPage() {
   const socket = useSocket();
   const { roomId } = useParams();
-  const [quizType, setQuizType] = useState("flags"); // или другой тип викторины
+  const [quizType, setQuizType] = useState("flags");
 
   const [players, setPlayers] = useState<string[]>([]);
   const [answers, setAnswers] = useState<{ 
@@ -23,12 +23,12 @@ export default function RoomPage() {
     isCorrect: boolean;
   }[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [gameQuestions, setGameQuestions] = useState<Question[]>([]);
   const [error, setError] = useState("");
   const [gameOver, setGameOver] = useState(false);
   const [scores, setScores] = useState<Record<string, number>>({});
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   // Загрузка вопросов при монтировании
   useEffect(() => {
@@ -47,8 +47,9 @@ export default function RoomPage() {
             : q.options,
         }));
         
-        setAllQuestions(parsed);
-        setGameQuestions(parsed.sort(() => 0.5 - Math.random()).slice(0, 10));
+        const shuffled = parsed.sort(() => 0.5 - Math.random()).slice(0, 10);
+        setGameQuestions(shuffled);
+        setCurrentQuestion(shuffled[0]);
         setStatus('ready');
       })
       .catch((err) => {
@@ -69,10 +70,6 @@ export default function RoomPage() {
         setError(response.message);
       } else {
         setError("");
-        // Устанавливаем первый вопрос после успешного подключения
-        if (gameQuestions.length > 0) {
-          setCurrentQuestion(gameQuestions[0]);
-        }
       }
     });
 
@@ -81,47 +78,69 @@ export default function RoomPage() {
     });
 
     socket.on("answer", (data) => {
-      setAnswers((prev) => [...prev, data]);
-      
-      // Обновляем счет
-      if (data.isCorrect) {
-        setScores(prev => ({
-          ...prev,
-          [data.playerId]: (prev[data.playerId] || 0) + 1
-        }));
-      }
+      // Используем функцию обновления состояния для гарантированного получения актуального состояния
+      setAnswers(prevAnswers => {
+        const newAnswers = [...prevAnswers, data];
+        
+        // Обновляем счет только если это новый ответ
+        if (!prevAnswers.some(a => a.playerId === data.playerId && a.answer === data.answer)) {
+          setScores(prevScores => ({
+            ...prevScores,
+            [data.playerId]: (prevScores[data.playerId] || 0) + (data.isCorrect ? 1 : 0)
+          }));
+        }
+        
+        return newAnswers;
+      });
     });
 
     return () => {
       socket.off("player-joined");
       socket.off("answer");
     };
-  }, [socket, roomId, status, gameQuestions]);
+  }, [socket, roomId, status]);
 
   const handleAnswer = (answer: string) => {
-    if (!roomId || typeof roomId !== "string" || !currentQuestion) return;
-    
-    const isCorrect = currentQuestion.correct === answer;
-    socket?.emit("answer", { 
-      roomId, 
-      answer,
-      isCorrect,
-      questionId: currentQuestion.id
-    });
+  if (!roomId || typeof roomId !== "string" || !currentQuestion) return;
 
-    // Переход к следующему вопросу после ответа всех игроков
-    if (answers.length + 2 >= players.length) {
-      const nextIndex = gameQuestions.findIndex(q => q.id === currentQuestion.id) + 1;
-      if (nextIndex < gameQuestions.length) {
-        setTimeout(() => {
-          setCurrentQuestion(gameQuestions[nextIndex]);
-          setAnswers([]);
-        }, 100); // Задержка перед следующим вопросом
-      } else {
-        setGameOver(true);
-      }
+  const isCorrect = currentQuestion.correct === answer;
+
+  socket?.emit("answer", {
+    roomId,
+    answer,
+    isCorrect,
+    questionId: currentQuestion.id
+  });
+
+  // Локально добавляем ответ
+  setAnswers(prev => [...prev, {
+    playerId: socket.id,
+    answer,
+    isCorrect
+  }]);
+
+  // ✅ Локально обновляем счёт
+  if (isCorrect) {
+    setScores(prev => ({
+      ...prev,
+      [socket.id]: (prev[socket.id] || 0) + 2
+    }));
+  }
+
+  // Переход к следующему вопросу после ответов всех
+  if (answers.length + 2 >= players.length) {
+    const nextIndex = currentQuestionIndex + 1;
+    if (nextIndex < gameQuestions.length) {
+      setTimeout(() => {
+        setCurrentQuestion(gameQuestions[nextIndex]);
+        setCurrentQuestionIndex(nextIndex);
+        setAnswers([]);
+      }, 100);
+    } else {
+      setGameOver(true);
     }
-  };
+  }
+};
 
   if (status === "loading") {
     return <div>Загрузка вопросов...</div>;
@@ -133,61 +152,90 @@ export default function RoomPage() {
 
   if (gameOver) {
     return (
-      <div>
+      <div className="game-over-container">
         <h1>Игра завершена!</h1>
-        <h2>Результаты:</h2>
-        <ul>
-          {Object.entries(scores).map(([playerId, score]) => (
-            <li key={playerId}>
-              Игрок {playerId}: {score} очков
-            </li>
+        <h2>Финальные результаты:</h2>
+        <div className="scoreboard">
+          {players.map(player => (
+            <div key={player} className="player-score">
+              <span className="player-name">{player}</span>
+              <span className="score-value">{scores[player] || 0} очков</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="game-container">
       <h1>Комната: {roomId}</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      <h3>Подключено игроков: {players.length} / 2</h3>
-      <ul>
-        {players.map((p) => (
-          <li key={p}>
-            {p} - {scores[p] || 0} очков
-          </li>
-        ))}
-      </ul>
+      <div className="players-info">
+        <h3>Игроки ({players.length}/2):</h3>
+        <ul>
+          {players.map(player => (
+            <li key={player}>
+              {player} - <strong>{scores[player] || 0}</strong> {scores[player] === 1 ? 'очко' : 'очков'}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="progress">
+        Вопрос {currentQuestionIndex + 1} из {gameQuestions.length}
+      </div>
 
       {players.length < 2 ? (
-        <p>Ожидание второго игрока...</p>
+        <p className="waiting-message">Ожидание второго игрока...</p>
       ) : (
         currentQuestion && (
-          <>
-            <h3>Вопрос: {currentQuestion.question}</h3>
-            <div>
-              {currentQuestion.options.map((option, index) => (
-                <button 
-                  key={index} 
-                  onClick={() => handleAnswer(option)}
-                  disabled={answers.some(a => a.playerId === socket.id)}
-                >
-                  {option}
-                </button>
-              ))}
+          <div className="question-section">
+            <h2 className="question-text">{currentQuestion.question}</h2>
+            
+            <div className="options-grid">
+              {currentQuestion.options.map((option, index) => {
+                const playerAnswer = answers.find(a => a.playerId === socket.id);
+                const isAnswered = !!playerAnswer;
+                const isThisOptionSelected = playerAnswer?.answer === option;
+                const isCorrectOption = currentQuestion.correct === option;
+                
+                return (
+                  <button
+                    key={index}
+                    className={`
+                      option-button 
+                      ${isAnswered ? 'answered' : ''}
+                      ${isThisOptionSelected ? 
+                        (playerAnswer.isCorrect ? 'correct' : 'incorrect') : ''}
+                      ${isAnswered && isCorrectOption ? 'show-correct' : ''}
+                    `}
+                    onClick={() => handleAnswer(option)}
+                    disabled={isAnswered}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
             </div>
 
-            <h3>Ответы:</h3>
-            <ul>
-              {answers.map((a, i) => (
-                <li key={i} style={{ color: a.isCorrect ? 'green' : 'red' }}>
-                  Игрок {a.playerId} ответил: {a.answer}
-                </li>
-              ))}
-            </ul>
-          </>
+            {answers.length > 0 && (
+              <div className="answers-log">
+                <h3>Ответы:</h3>
+                <ul>
+                  {answers.map((answer, i) => (
+                    <li 
+                      key={i} 
+                      className={`answer-item ${answer.isCorrect ? 'correct' : 'incorrect'}`}
+                    >
+                      {answer.playerId === socket.id ? 'Вы' : 'Соперник'} ответили: {answer.answer}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )
       )}
     </div>
