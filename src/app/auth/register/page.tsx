@@ -5,18 +5,20 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "../auth.module.css";
 
+import Input from "../../../components/Input/page";
+import PasswordInput from "../../../components/PasswordInput/page";
+import ErrorMessage from "../../../components/ErrorMessage/Page";
+
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const router = useRouter();
   const [error, setError] = useState("");
 
+  const router = useRouter();
+
   const handleRegister = async () => {
-    // Валидация
     if (!name || !email || !password || !confirmPassword) {
       setError("Все поля обязательны для заполнения");
       return;
@@ -42,7 +44,7 @@ export default function RegisterPage() {
       });
 
       if (res.ok) {
-        router.push("/login");
+        router.push("/auth/login");
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Ошибка регистрации");
@@ -52,69 +54,38 @@ export default function RegisterPage() {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Регистрация</h1>
-      {error && <p className={styles.error}>{error}</p>}
-      
-      <input
-        type="text"
+      <ErrorMessage text={error} />
+
+      <Input
         placeholder="Имя"
         value={name}
-        className={styles.input}
         onChange={(e) => setName(e.target.value)}
+        className={styles.input}
       />
-      
-      <input
+
+      <Input
         type="email"
         placeholder="Email"
         value={email}
-        className={styles.input}
         onChange={(e) => setEmail(e.target.value)}
+        className={styles.input}
       />
-      
-      <div className={styles.passwordContainer}>
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder="Пароль"
-          value={password}
-          className={styles.input}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button 
-          type="button" 
-          onClick={togglePasswordVisibility}
-          className={styles.toggleButton}
-        >
-          {showPassword ? "Скрыть" : "Показать"}
-        </button>
-      </div>
-      
-      <div className={styles.passwordContainer}>
-        <input
-          type={showConfirmPassword ? "text" : "password"}
-          placeholder="Подтвердите пароль"
-          value={confirmPassword}
-          className={styles.input}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <button 
-          type="button" 
-          onClick={toggleConfirmPasswordVisibility}
-          className={styles.toggleButton}
-        >
-          {showConfirmPassword ? "Скрыть" : "Показать"}
-        </button>
-      </div>
-      
+
+      <PasswordInput
+        placeholder="Пароль"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <PasswordInput
+        placeholder="Подтвердите пароль"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+
       <button className={styles.button} onClick={handleRegister}>
         Зарегистрироваться
       </button>
