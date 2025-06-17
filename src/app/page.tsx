@@ -46,7 +46,7 @@ export default function Home() {
             Многопользовательская игра
           </MenuButton>
 
-          <MenuButton href="/rating">
+          <MenuButton href="/leaderboard">
             Рейтинг
           </MenuButton>
         </div>

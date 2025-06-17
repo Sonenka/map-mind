@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
 import OptionButton from '../OptionButton/OptionButton';
@@ -8,6 +9,8 @@ import styles from './styles.module.css';
 import { QuestionType } from '../../lib/types';
 
 export default function BaseQuiz({ quizType }: { quizType: string }) {
+  const { data: session } = useSession();
+
   const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -65,6 +68,19 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     setSelectedIndex(null);
     setCorrectIndex(null);
   };
+
+  // ✅ Сохраняем результат, когда викторина завершена и пользователь авторизован
+  useEffect(() => {
+    if (currentIndex >= questions.length && session?.user) {
+      fetch("/api/result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ score }),
+      }).catch((err) => {
+        console.error("Ошибка при сохранении результата:", err);
+      });
+    }
+  }, [currentIndex, questions.length, score, session]);
 
   if (status === 'loading') {
     return <div className={styles.answerContainer}><h3>Загрузка...</h3></div>;
