@@ -7,7 +7,7 @@ export default function Singleplayer() {
     { id: 'capitals', name: 'Столицы' },
     { id: 'flags', name: 'Флаги' },
     { id: 'photos', name: 'Фото' },
-    { id: 'contours', name: 'Контур' },
+    { id: 'map', name: 'Карта' },
   ];
 
   return (

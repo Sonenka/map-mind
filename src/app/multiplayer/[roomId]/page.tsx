@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSocket } from "@/lib/useSocket";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams  } from "next/navigation";
 import styles from "./RoomPage.module.css";
 
 type Question = {
@@ -15,7 +15,8 @@ type Question = {
 export default function RoomPage() {
   const socket = useSocket();
   const { roomId } = useParams();
-  const [quizType, setQuizType] = useState("flags");
+  const searchParams = useSearchParams();
+  const quizType = searchParams.get("quizType") || "flags";
 
   const [socketId, setSocketId] = useState<string | null>(null);
   const [players, setPlayers] = useState<string[]>([]);
