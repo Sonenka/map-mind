@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import styles from './leaderboard.module.css';
 
 type Player = {
   name: string;
@@ -17,12 +18,14 @@ export default function LeaderboardPage() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>🏆 Топ игроков</h1>
-      <ul>
+    <div className={styles.container}>
+      <h1 className={styles.title}>🏆 Топ игроков</h1>
+      <ul className={styles.list}>
         {players.map((player, index) => (
-          <li key={index}>
-            {index + 1}. {player.name} — {player.totalScore} очков
+          <li key={index} className={styles.item}>
+            <span className={styles.rank}>#{index + 1}</span>
+            <span className={styles.name}>{player.name}</span>
+            <span className={styles.score}>{player.totalScore} очков</span>
           </li>
         ))}
       </ul>
