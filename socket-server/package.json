@@ -8,8 +8,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "socket.io": "^4.8.1"
-  }
+  },
+  "description": ""
 }
