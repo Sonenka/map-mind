@@ -4,7 +4,10 @@ import Link from 'next/link';
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import styles from "./AuthPage.module.css";
+import styles from "../auth.module.css";
+
+import Input from "../../../components/Input/page";
+import ErrorMessage from "../../../components/ErrorMessage/Page";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,26 +32,30 @@ export default function LoginPage() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Вход</h1>
-      {error && <p className={styles.error}>{error}</p>}
-      <input
+      <ErrorMessage text={error} />
+
+      <Input
         type="email"
         placeholder="Email"
         value={email}
-        className={styles.input}
         onChange={(e) => setEmail(e.target.value)}
+        className={styles.input}
       />
-      <input
+
+      <Input
         type="password"
         placeholder="Пароль"
         value={password}
-        className={styles.input}
         onChange={(e) => setPassword(e.target.value)}
+        className={styles.input}
       />
+
       <button className={styles.button} onClick={handleLogin}>
         Войти
       </button>
+
       <p className={styles.registerLink}>
-        Еще нет аккаунта? <Link href="/register">Зарегистрируйтесь</Link>
+        Еще нет аккаунта? <Link href="/auth/register">Зарегистрируйтесь</Link>
       </p>
     </div>
   );

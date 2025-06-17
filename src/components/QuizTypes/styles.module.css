@@ -130,3 +130,24 @@
 .homeLink:hover {
   color: #0059c1;
 }
+
+.imageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 12px;
+  border: 2px solid #ccc;
+}
+
+.questionImage {
+  height: auto;
+  max-height: 300px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+

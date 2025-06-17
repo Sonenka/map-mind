@@ -26,7 +26,7 @@ export default function Home() {
       <div className={styles.content}>
         {/* Добавляем кнопку профиля в правый верхний угол */}
         <div className={styles.profileButtonContainer}>
-          <Link href="/profile" className={styles.profileButton}>
+          <Link href="/auth/profile" className={styles.profileButton}>
             {session ? (
               <span className={styles.profileIcon}>👤</span>
             ) : (
@@ -46,7 +46,7 @@ export default function Home() {
             Многопользовательская игра
           </MenuButton>
 
-          <MenuButton href="/rating">
+          <MenuButton href="/leaderboard">
             Рейтинг
           </MenuButton>
         </div>
