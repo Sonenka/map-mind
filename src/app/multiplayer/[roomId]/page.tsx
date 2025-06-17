@@ -17,6 +17,7 @@ export default function RoomPage() {
   const { roomId } = useParams();
   const [quizType, setQuizType] = useState("flags");
 
+  const [socketId, setSocketId] = useState<string | null>(null);
   const [players, setPlayers] = useState<string[]>([]);
   const [answers, setAnswers] = useState<{
     playerId: string;
@@ -30,6 +31,26 @@ export default function RoomPage() {
   const [scores, setScores] = useState<Record<string, number>>({});
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // Обновляем socketId, когда socket подключается
+  useEffect(() => {
+    if (!socket) return;
+
+    if (socket.connected && socket.id !== undefined) {
+      setSocketId(socket.id);
+    } else {
+      const onConnect = () => {
+        if (socket.id !== undefined) {
+          setSocketId(socket.id);
+        }
+      };
+      socket.on("connect", onConnect);
+      return () => {
+        socket.off("connect", onConnect);
+      };
+    }
+  }, [socket]);
+
 
   useEffect(() => {
     fetch(`/api/questions/${quizType}`)
@@ -103,7 +124,7 @@ export default function RoomPage() {
   }, [socket, roomId, status]);
 
   const handleAnswer = (answer: string) => {
-    if (!roomId || typeof roomId !== "string" || !currentQuestion) return;
+    if (!roomId || typeof roomId !== "string" || !currentQuestion || !socketId) return;
 
     const isCorrect = currentQuestion.correct === answer;
 
@@ -114,12 +135,12 @@ export default function RoomPage() {
       questionId: currentQuestion.id,
     });
 
-    setAnswers((prev) => [...prev, { playerId: socket.id, answer, isCorrect }]);
+    setAnswers((prev) => [...prev, { playerId: socketId, answer, isCorrect }]);
 
     if (isCorrect) {
       setScores((prev) => ({
         ...prev,
-        [socket.id]: (prev[socket.id] || 0) + 2,
+        [socketId]: (prev[socketId] || 0) + 2,
       }));
     }
 
@@ -192,7 +213,7 @@ export default function RoomPage() {
 
             <div className={styles["options-grid"]}>
               {currentQuestion.options.map((option, index) => {
-                const playerAnswer = answers.find((a) => a.playerId === socket.id);
+                const playerAnswer = answers.find((a) => a.playerId === socketId);
                 const isAnswered = !!playerAnswer;
                 const isThisOptionSelected = playerAnswer?.answer === option;
                 const isCorrectOption = currentQuestion.correct === option;
@@ -234,7 +255,7 @@ export default function RoomPage() {
                         answer.isCorrect ? styles.correct : styles.incorrect
                       }`}
                     >
-                      {answer.playerId === socket.id ? "Вы" : "Соперник"} ответили:{" "}
+                      {answer.playerId === socketId ? "Вы" : "Соперник"} ответили:{" "}
                       {answer.answer}
                     </li>
                   ))}
