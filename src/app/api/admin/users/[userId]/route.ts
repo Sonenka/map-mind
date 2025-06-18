@@ -5,7 +5,7 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { userId: string } }
 ): Promise<NextResponse> {
-  const { userId } = context.params;
+  const userId = context.params.userId;
 
   try {
     await prisma.user.delete({
@@ -15,9 +15,6 @@ export async function DELETE(
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return NextResponse.json(
-      { error: 'Ошибка при удалении пользователя' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Ошибка при удалении пользователя' }, { status: 500 });
   }
 }
