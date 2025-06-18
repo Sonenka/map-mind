@@ -32,7 +32,7 @@ export default function QuestionsPage() {
         <option value="capitals">Столицы</option>
         <option value="flags">Флаги</option>
         <option value="photos">Фото</option>
-        <option value="contours">Контуры</option>
+        <option value="map">Карта</option>
       </select>
 
       <button onClick={() => { setSelectedQuestion(null); setShowModal(true); }} className="mb-4 px-4 py-2 bg-blue-600 text-white rounded">
