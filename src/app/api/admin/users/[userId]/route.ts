@@ -1,20 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function DELETE(
-  req: NextRequest,
-  context: { params: { userId: string } }
-): Promise<NextResponse> {
-  const userId = context.params.userId;
-
+  request: Request,
+  { params }: { params: { userId: string } }
+) {
   try {
+
     await prisma.user.delete({
-      where: { id: userId },
+      where: { id: params.userId },
     });
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return NextResponse.json({ error: 'Ошибка при удалении пользователя' }, { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: 'Ошибка при удалении пользователя' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
 }
