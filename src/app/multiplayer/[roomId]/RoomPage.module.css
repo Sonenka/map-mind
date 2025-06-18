@@ -160,3 +160,40 @@
   margin-bottom: 16px;
   text-align: center;
 }
+
+.imageWrapper {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.questionImage {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.imageOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.flagImage {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+  cursor: pointer;
+}
+
+.option.correct {
+  border-color: green;
+}
+
+.option.incorrect {
+  border-color: red;
+}
