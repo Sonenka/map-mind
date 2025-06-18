@@ -3,9 +3,9 @@ import prisma from '@/lib/prisma';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { userId: string } }
+  { params }: { params: Record<string, string> }
 ) {
-  const { userId } = context.params;
+  const userId = params.userId;
 
   try {
     await prisma.user.delete({
