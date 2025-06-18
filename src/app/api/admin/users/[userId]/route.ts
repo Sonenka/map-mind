@@ -3,31 +3,21 @@ import prisma from '@/lib/prisma';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Record<string, string> }
-) {
-  const userId = params.userId;
+  context: { params: { userId: string } }
+): Promise<NextResponse> {
+  const { userId } = context.params;
 
   try {
     await prisma.user.delete({
       where: { id: userId },
     });
 
-    return new NextResponse(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Ошибка при удалении пользователя' }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+    return NextResponse.json(
+      { error: 'Ошибка при удалении пользователя' },
+      { status: 500 }
     );
   }
 }
