@@ -4,7 +4,6 @@
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  margin-bottom: 1rem;
   height: 20px;
 }
 
@@ -24,4 +23,16 @@
   text-align: center;
   line-height: 20px;
   font-weight: bold;
+}
+
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progressLink {
+  font-size: 24px;
+  font-weight: 900;
+  color: #e41e1e;
 }

@@ -42,7 +42,7 @@ export default function Home() {
             Одиночная игра
           </MenuButton>
 
-          <MenuButton variant="disabled">
+          <MenuButton href="/multiplayer/create">
             Многопользовательская игра
           </MenuButton>
 

@@ -17,7 +17,7 @@ body {
 }
 
 body {
-  background-color: #162944;
+  background-color: black;
   color: var(--foreground);
   background: linear-gradient(90deg, #000000,#162944,#070e18);
   -webkit-font-smoothing: antialiased;

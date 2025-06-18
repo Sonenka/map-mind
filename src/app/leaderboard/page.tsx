@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from './leaderboard.module.css';
+import MenuButton from "@/components/MenuButton/MenuButton";
 
 type Player = {
   name: string;
@@ -19,6 +20,12 @@ export default function LeaderboardPage() {
 
   return (
     <div className={styles.container}>
+      <MenuButton
+        href="/"
+        variant='back'
+      >
+        ← Назад
+      </MenuButton>
       <h1 className={styles.title}>🏆 Топ игроков</h1>
       <ul className={styles.list}>
         {players.map((player, index) => (

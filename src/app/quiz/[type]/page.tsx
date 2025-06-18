@@ -1,7 +1,7 @@
 import CapitalsQuiz from '@/components/QuizTypes/CapitalsQuiz';
 import FlagsQuiz from '@/components/QuizTypes/FlagsQuiz';
 import PhotosQuiz from '@/components/QuizTypes/PhotosQuiz';
-import ContoursQuiz from '@/components/QuizTypes/ContoursQuiz';
+import MapQuiz from '@/components/QuizTypes/MapQuiz';
 
 export default function QuizPage({ params }: { params: { type: string } }) {
   const { type } = params;
@@ -14,8 +14,8 @@ export default function QuizPage({ params }: { params: { type: string } }) {
         return <FlagsQuiz />;
       case 'photos':
         return <PhotosQuiz />;
-      case 'contours':
-        return <ContoursQuiz />;
+      case 'map':
+        return <MapQuiz />;
       default:
         return (
           <div style={{ 
