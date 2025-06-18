@@ -1,14 +1,15 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useSocket } from "@/lib/useSocket";
-import { useParams, useSearchParams  } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import styles from "./RoomPage.module.css";
 
 type Question = {
   id: string;
   question: string;
-  options: string[];
+  options: string[]; // уже массив
   correct: string;
 };
 
@@ -20,11 +21,9 @@ export default function RoomPage() {
 
   const [socketId, setSocketId] = useState<string | null>(null);
   const [players, setPlayers] = useState<string[]>([]);
-  const [answers, setAnswers] = useState<{
-    playerId: string;
-    answer: string;
-    isCorrect: boolean;
-  }[]>([]);
+  const [answers, setAnswers] = useState<
+    { playerId: string; answer: string; isCorrect: boolean }[]
+  >([]);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [gameQuestions, setGameQuestions] = useState<Question[]>([]);
   const [error, setError] = useState("");
@@ -32,8 +31,8 @@ export default function RoomPage() {
   const [scores, setScores] = useState<Record<string, number>>({});
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { data: session, status: sessionStatus } = useSession();
 
-  // Обновляем socketId, когда socket подключается
   useEffect(() => {
     if (!socket) return;
 
@@ -52,25 +51,16 @@ export default function RoomPage() {
     }
   }, [socket]);
 
-
   useEffect(() => {
     fetch(`/api/questions/${quizType}`)
       .then((res) => {
         if (!res.ok) throw new Error("Ошибка загрузки данных");
         return res.json();
       })
-      .then((data) => {
+      .then((data: Question[]) => {
         if (!Array.isArray(data)) throw new Error("Неверный формат данных");
 
-        const parsed = data.map((q: any) => ({
-          ...q,
-          options:
-            typeof q.options === "string"
-              ? q.options.split(";").map((opt: string) => opt.trim())
-              : q.options,
-        }));
-
-        const shuffled = parsed.sort(() => 0.5 - Math.random()).slice(0, 10);
+        const shuffled = data.sort(() => 0.5 - Math.random()).slice(0, 10);
         setGameQuestions(shuffled);
         setCurrentQuestion(shuffled[0]);
         setStatus("ready");
@@ -84,10 +74,13 @@ export default function RoomPage() {
 
   useEffect(() => {
     if (!socket || typeof roomId !== "string" || status !== "ready") return;
+    if (sessionStatus !== "authenticated") return;
+
+    const playerName = session?.user?.name || "Игрок";
 
     socket.emit(
       "join",
-      roomId,
+      { roomId, name: playerName },
       (response: { success: boolean; message: string }) => {
         if (!response.success) {
           setError(response.message);
@@ -97,32 +90,24 @@ export default function RoomPage() {
       }
     );
 
-    socket.on("player-joined", (playersInRoom) => {
-      setPlayers(Array.isArray(playersInRoom) ? playersInRoom : []);
+    socket.on("player-joined", (names: string[]) => {
+      setPlayers(names);
     });
 
     socket.on("answer", (data) => {
-      setAnswers((prevAnswers) => {
-        const newAnswers = [...prevAnswers, data];
-        if (
-          !prevAnswers.some(
-            (a) => a.playerId === data.playerId && a.answer === data.answer
-          )
-        ) {
-          setScores((prevScores) => ({
-            ...prevScores,
-            [data.playerId]: (prevScores[data.playerId] || 0) + (data.isCorrect ? 1 : 0),
-          }));
-        }
-        return newAnswers;
-      });
+      setAnswers((prev) => [...prev, data]);
+      setScores((prev) => ({
+        ...prev,
+        [data.playerName]: (prev[data.playerName] || 0) + (data.isCorrect ? 1 : 0),
+      }));
     });
 
     return () => {
       socket.off("player-joined");
       socket.off("answer");
     };
-  }, [socket, roomId, status]);
+  }, [socket, roomId, status, session, sessionStatus]);
+
 
   const handleAnswer = (answer: string) => {
     if (!roomId || typeof roomId !== "string" || !currentQuestion || !socketId) return;
@@ -194,7 +179,7 @@ export default function RoomPage() {
         <ul>
           {players.map((player) => (
             <li key={player}>
-              {player} - <strong>{scores[player] || 0}</strong>{" "}
+              {player} — <strong>{scores[player] || 0}</strong>{" "}
               {scores[player] === 1 ? "очко" : "очков"}
             </li>
           ))}

@@ -1,20 +1,18 @@
 const { Server } = require("socket.io");
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
 const io = new Server(4000, {
-  cors: {
-    origin: "*",
-  },
+  cors: { origin: "*" },
 });
 
-const rooms = {}; // roomId -> { players: Set, questions: [], currentQuestionIndex: 0 }
+const rooms = {}; // roomId -> { players: Map<socketId, playerName>, questions, currentQuestionIndex }
 
-// Функция проверки правильности ответа
 async function checkAnswer(questionId, answer) {
   try {
     const question = await prisma.question.findUnique({
       where: { id: questionId },
-      select: { correct: true }
+      select: { correct: true },
     });
     return question?.correct === answer;
   } catch (error) {
@@ -26,112 +24,87 @@ async function checkAnswer(questionId, answer) {
 io.on("connection", (socket) => {
   console.log("✅ Новый клиент:", socket.id);
 
-  socket.on("join", async (roomId, callback) => {
+  socket.on("join", async ({ roomId, name }, callback) => {
     if (!rooms[roomId]) {
       try {
-        // Загружаем вопросы из базы данных
         const questions = await prisma.question.findMany({
-          where: {  }, // или другой тип викторины
+          where: {},
           take: 10,
-          select: {
-            id: true,
-            question: true,
-            options: true,
-            correct: true
-          }
+          select: { id: true, question: true, options: true, correct: true },
         });
 
         rooms[roomId] = {
-          players: new Set(),
-          questions: questions,
-          currentQuestionIndex: 0
+          players: new Map(),
+          questions,
+          currentQuestionIndex: 0,
         };
       } catch (err) {
-        console.error("Error loading questions:", err);
-        callback({ success: false, message: "Ошибка загрузки вопросов" });
-        return;
+        console.error("Ошибка загрузки вопросов:", err);
+        return callback({ success: false, message: "Ошибка загрузки" });
       }
     }
 
     if (rooms[roomId].players.size >= 2) {
-      callback({ success: false, message: "Комната заполнена" });
-      return;
+      return callback({ success: false, message: "Комната заполнена" });
     }
 
-    rooms[roomId].players.add(socket.id);
+    rooms[roomId].players.set(socket.id, name);
     socket.join(roomId);
 
-    callback({ 
-      success: true, 
+    const playerNames = Array.from(rooms[roomId].players.values());
+    io.to(roomId).emit("player-joined", playerNames);
+
+    callback({
+      success: true,
       message: "Успешное подключение",
-      currentQuestion: rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
+      currentQuestion: rooms[roomId].questions[rooms[roomId].currentQuestionIndex],
     });
 
-    // Отправляем обновленный список игроков
-    const players = Array.from(rooms[roomId].players);
-    io.to(roomId).emit("player-joined", players);
-    
-    // Отправляем текущий вопрос
-    io.to(roomId).emit("new-question", 
-      rooms[roomId].questions[rooms[roomId].currentQuestionIndex]
-    );
+    io.to(roomId).emit("new-question", rooms[roomId].questions[rooms[roomId].currentQuestionIndex]);
   });
 
-  // Обработчик ответов от клиентов
-  socket.on("answer", async (data) => {
-    try {
-      const { roomId, answer, questionId } = data;
-      const room = rooms[roomId];
-      
-      if (!room) {
-        console.log("Комната не найдена");
-        return;
-      }
+  socket.on("answer", async ({ roomId, answer, questionId }) => {
+    const room = rooms[roomId];
+    if (!room) return;
 
-      // Проверяем правильность ответа
-      const isCorrect = await checkAnswer(questionId, answer);
-      
-      // Отправляем ответ всем в комнате
-      io.to(roomId).emit("answer", { 
-        playerId: socket.id, 
-        answer,
-        isCorrect,
-        questionId
-      });
+    const isCorrect = await checkAnswer(questionId, answer);
+    const name = room.players.get(socket.id);
 
-      // Проверяем, ответили ли все игроки
-      moveToNextQuestion(roomId);
-    } catch (error) {
-      console.error("Error handling answer:", error);
-    }
+    io.to(roomId).emit("answer", {
+      playerName: name,
+      answer,
+      isCorrect,
+      questionId,
+    });
+
+    moveToNextQuestion(roomId);
   });
 
   socket.on("disconnect", () => {
     for (const roomId in rooms) {
-      if (rooms[roomId].players.has(socket.id)) {
-        rooms[roomId].players.delete(socket.id);
+      const room = rooms[roomId];
+      if (room.players.has(socket.id)) {
+        room.players.delete(socket.id);
         console.log(`❌ ${socket.id} покинул комнату ${roomId}`);
 
-        if (rooms[roomId].players.size === 0) {
+        if (room.players.size === 0) {
           delete rooms[roomId];
         } else {
-          const players = Array.from(rooms[roomId].players);
-          io.to(roomId).emit("player-joined", players);
+          const playerNames = Array.from(room.players.values());
+          io.to(roomId).emit("player-joined", playerNames);
         }
+
         break;
       }
     }
   });
 });
 
-
-// Переход к следующему вопросу
 function moveToNextQuestion(roomId) {
   const room = rooms[roomId];
   if (!room) return;
 
   room.currentQuestionIndex++;
-  
   if (room.currentQuestionIndex < room.questions.length) {
     io.to(roomId).emit("new-question", room.questions[room.currentQuestionIndex]);
   } else {
