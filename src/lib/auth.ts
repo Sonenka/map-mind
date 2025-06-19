@@ -35,16 +35,17 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
   async session({ session, token, user }) {
-    // Обновляем сессию из БД при каждом запросе
+    if (!session.user) return session; 
+
     const dbUser = await prisma.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: session.user.email ?? undefined },
     });
-    
-    if (dbUser) {
-      session.user.name = dbUser.name;
-      session.user.email = dbUser.email;
+
+    if (dbUser && session.user) {
+      session.user.name = dbUser.name ?? undefined;  
+      session.user.email = dbUser.email ?? undefined;
     }
-    
+
     return session;
   }
 }

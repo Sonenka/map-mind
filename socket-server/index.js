@@ -3,10 +3,13 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const io = new Server(4000, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "http://89.169.142.214:3000",
+    methods: ["GET", "POST"],
+  },
 });
 
-const rooms = {}; // roomId -> { players: Map<socketId, playerName>, questions, currentQuestionIndex }
+const rooms = {};
 
 async function checkAnswer(questionId, answer) {
   try {
