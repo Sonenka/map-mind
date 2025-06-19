@@ -1,12 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-<<<<<<< HEAD
-export async function DELETE(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
-=======
 export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.pathname.split('/').pop();
@@ -15,11 +9,9 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'userId не найден' }, { status: 400 });
   }
 
->>>>>>> 361b7c84784eb6d484912daf288f70a1633b4944
   try {
-
     await prisma.user.delete({
-      where: { id: params.userId },
+      where: { id: userId },
     });
 
     return NextResponse.json({ success: true });
