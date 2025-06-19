@@ -3,8 +3,9 @@ import FlagsQuiz from '@/components/QuizTypes/FlagsQuiz';
 import PhotosQuiz from '@/components/QuizTypes/PhotosQuiz';
 import MapQuiz from '@/components/QuizTypes/MapQuiz';
 
-export default function QuizPage({ params }: { params: { type: string } }) {
-  const { type } = params;
+export default async function QuizPage({ params }: { params: Promise<{ type: string }> }) {
+  const resolvedParams = await params;
+  const { type } = resolvedParams;
 
   const QuizComponent = (() => {
     switch (type) {
