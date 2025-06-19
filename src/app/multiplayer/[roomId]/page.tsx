@@ -64,7 +64,7 @@ export default function RoomPage() {
           ...q,
           options:
             typeof q.options === 'string'
-              ? q.options.split(';').map((opt: string) => opt.trim())
+              ? (q.options as string).split(';').map((opt: string) => opt.trim())
               : q.options,
         }));
         const shuffled = parsed.sort(() => 0.5 - Math.random()).slice(0, 10);

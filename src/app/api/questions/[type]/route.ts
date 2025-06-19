@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         question: data.question,
         options: Array.isArray(data.options) ? data.options.join(';') : data.options,
         correct: data.correct,
-        type,
+        type: data.type,
       },
     });
 

@@ -24,7 +24,7 @@ export function QuestionModal({ question, onClose, onSaved, type }: Props) {
     if (question) {
       const optionsArray =
         typeof question.options === 'string'
-          ? question.options.split(';')
+          ? (question.options as string).split(';')
           : Array.isArray(question.options)
           ? question.options
           : [];
