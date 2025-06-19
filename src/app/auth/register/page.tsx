@@ -24,6 +24,12 @@ export default function RegisterPage() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Введите корректный email");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Пароли не совпадают");
       return;
@@ -47,7 +53,7 @@ export default function RegisterPage() {
         router.push("/auth/login");
       } else {
         const errorData = await res.json();
-        setError(errorData.message || "Ошибка регистрации");
+        setError(errorData.error || "Ошибка регистрации");
       }
     } catch (err) {
       setError("Произошла ошибка при соединении с сервером");
