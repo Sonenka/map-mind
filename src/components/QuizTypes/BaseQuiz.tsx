@@ -32,12 +32,20 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
       })
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Неверный формат данных');
-        const parsed = data.map((q: any) => ({
-          ...q,
-          options: typeof q.options === 'string'
+
+        const parsed = data.map((q: any) => {
+          const optionsArray = typeof q.options === 'string'
             ? q.options.split(';').map((opt: string) => opt.trim())
-            : q.options,
-        }));
+            : q.options;
+
+          const shuffledOptions = [...optionsArray].sort(() => Math.random() - 0.5);
+
+          return {
+            ...q,
+            options: shuffledOptions,
+          };
+        });
+
         setAllQuestions(parsed);
         setQuestions(parsed.sort(() => 0.5 - Math.random()).slice(0, 10));
         setStatus('ready');
