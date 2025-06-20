@@ -28,6 +28,6 @@
 .quizGrid {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
   width: 100%;
 }
