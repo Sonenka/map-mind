@@ -5,18 +5,38 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  
+  const {
+    score,
+    currentUserId = null,
+    currentUserEmail = null,
+  } = await req.json();
+
+  if (session?.user?.email && (currentUserEmail || currentUserId)) {
+    return NextResponse.json({ error: "ANTISPAM" }, { status: 499 });
+  }
+
+  if (!session?.user?.email && !currentUserEmail) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const { score } = await req.json();
+  const userEmail = session?.user?.email || currentUserEmail;
 
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+    where: { email: userEmail },
   });
 
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  if (currentUserEmail) {
+    if (!currentUserId || !currentUserEmail) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 498 });
+    }
+    if (currentUserId !== user?.id) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 497 });
+    }
   }
 
   const result = await prisma.result.create({
