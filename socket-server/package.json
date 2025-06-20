@@ -11,5 +11,10 @@
   "dependencies": {
     "socket.io": "^4.8.1"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
 }
