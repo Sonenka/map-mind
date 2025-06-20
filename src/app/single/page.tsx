@@ -1,7 +1,7 @@
 import '../globals.css'
 import styles from './page.module.css';
 import MenuButton from '@/components/buttons/MenuButton/MenuButton';
-import BackgroundVideo from '@/components/BackgroundVideo/backgroundVideo';
+import BackgroundVideo from '@/components/BackgroundVideo/BackgroundVideo';
 
 export default function Singleplayer() {
   const quizTypes = [
@@ -28,7 +28,7 @@ export default function Singleplayer() {
           ))}
         </div>
 
-        <MenuButton variant='back'>
+        <MenuButton href='/' variant='back'>
           Назад
         </MenuButton>
       </div>
