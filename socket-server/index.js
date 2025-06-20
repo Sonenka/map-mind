@@ -4,8 +4,8 @@ const prisma = new PrismaClient();
 
 const io = new Server(4000, {
   cors: {
-    origin: "http://localhost:3000",
-    // origin: "http://89.169.142.214:3000",
+    // origin: "http://localhost:3000",
+    origin: "https://mapmind.ru",
     methods: ["GET", "POST"],
   },
 });
