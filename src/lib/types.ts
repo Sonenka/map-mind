@@ -9,3 +9,4 @@ export type QuestionType = {
 export type QuizType = {
   [key: string]: QuestionType[];
 };
+

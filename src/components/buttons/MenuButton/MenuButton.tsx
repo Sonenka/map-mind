@@ -1,17 +1,34 @@
 import Link from 'next/link';
 import styles from './MenuButton.module.css';
 
-type ButtonProps = {
-  variant?: 'default' | 'back' | 'small';
-  children: React.ReactNode;
-  href?: string;
-};
+type MenuButtonProps =
+  | {
+      href: string;
+      onClick?: never;
+      variant?: 'default' | 'back' | 'onMain';
+      children: React.ReactNode;
+    }
+  | {
+      onClick: () => void;
+      href?: never;
+      variant?: 'default' | 'back' | 'onMain';
+      children: React.ReactNode;
+    };
 
-export default function MenuButton({ variant = 'default', children, href = '/'}: ButtonProps) {
+export default function MenuButton({ href, onClick, variant = 'default', children }: MenuButtonProps) {
   const className = `${styles.button} ${styles[variant]}`;
+
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <Link href={href!} className={className}>
+    <button onClick={onClick} className={className}>
       {children}
-    </Link>
+    </button>
   );
 }

@@ -8,6 +8,7 @@
   
   cursor: pointer;
   transition: 0.4s;
+  color: white;
 }
 
 .button:active {
@@ -32,19 +33,22 @@
 .back {
   border: 3px #ff2e2e solid;
   background-color: #e41e1e;
-
   padding: 10px 48px;
 }
 
-.back:hover {
+.onMain {
+  height: 6.25rem;
+  border: 3px #ff2e2e solid;
+  background-color: #e41e1e;
+}
+
+.back:hover,
+.onMain:hover {
   box-shadow: 7px 5px 56px -14px #ff6868;
 }
 
-.back:active {
+.back:active,
+.onMain:active {
   box-shadow: 7px 5px 56px -10px #ff4444;
   border: 3px #ff4a4a solid;
-}
-
-.small {
-
 }
