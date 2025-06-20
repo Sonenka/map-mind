@@ -1,31 +1,66 @@
+/* styles.module.css */
+
 .container {
+  height: 100vh;
+  padding: 100px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #1e1e1e, #2c2c2c);
-  color: white;
-  text-align: center;
+  gap: 32px;
+  background: linear-gradient(90deg, #000000, #162944, #070e18);
+  color: #ffffff;
 }
 
 .title {
-  font-size: 2rem;
-  margin-bottom: 24px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+}
+
+.label {
+  font-size: 18px;
+  font-weight: 500;
+  color: #dddddd;
+}
+
+.select {
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #445b7c;
+  background-color: #0d1b2a;
+  color: #ffffff;
+  width: 240px;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.select:hover {
+  background-color: #152c44;
+  border-color: #3399ff;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: #3399ff;
+  background-color: #152c44;
 }
 
 .button {
-  background-color: #4caf50;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 600;
   color: white;
-  padding: 12px 24px;
-  font-size: 1.1rem;
+  background-color: #0070f3;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .button:hover {
-  background-color: #45a049;
+  background-color: #005ad6;
+  transform: scale(1.03);
 }

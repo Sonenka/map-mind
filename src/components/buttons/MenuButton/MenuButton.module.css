@@ -19,14 +19,15 @@
   height: 6.25rem;
   border: 3px #2e81ff solid;
   background-color: #1e6de4;
+  padding: 0 32px;
 }
 
 .default:hover {
-  box-shadow: 7px 5px 56px -14px #68a5ff;
+  box-shadow: 7px 5px 40px -14px #68a5ff;
 }
 
 .default:active {
-  box-shadow: 7px 5px 56px -10px #449bff;
+  box-shadow: 7px 5px 40px -10px #449bff;
   border: 3px #4a92ff solid;
 }
 
@@ -45,11 +46,11 @@
 
 .back:hover,
 .onMain:hover {
-  box-shadow: 7px 5px 56px -14px #ff6868;
+  box-shadow: 7px 5px 40px -14px #ff6868;
 }
 
 .back:active,
 .onMain:active {
-  box-shadow: 7px 5px 56px -10px #ff4444;
+  box-shadow: 7px 5px 40px -10px #ff4444;
   border: 3px #ff4a4a solid;
 }

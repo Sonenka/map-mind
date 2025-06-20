@@ -42,7 +42,7 @@ a {
 } */
 
 
-body, a, div, button {
+body, a, div, button, select, option {
   font-family: var(--font-play), sans-serif;
   margin: 0;
   padding: 0;

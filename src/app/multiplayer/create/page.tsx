@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './styles.module.css';
 import { useState } from 'react';
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
 
 export default function CreateRoomPage() {
   const router = useRouter();
@@ -30,9 +31,10 @@ export default function CreateRoomPage() {
         <option value="map">Карта</option>
       </select>
 
-      <button className={styles.button} onClick={handleCreateRoom}>
+      <MenuButton onClick={handleCreateRoom}>
         Создать и пригласить
-      </button>
+      </MenuButton>
+        
     </div>
   );
 }
