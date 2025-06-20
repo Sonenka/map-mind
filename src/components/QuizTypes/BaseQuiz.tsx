@@ -1,14 +1,28 @@
+// BaseQuiz.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
-import OptionButton from '../OptionButton/OptionButton';
+
+import ProgressBar from '../ProgressBar/ProgressBar';
+import MenuButton from '../buttons/MenuButton/MenuButton';
+
 import styles from './styles.module.css';
 import { QuestionType } from '../../lib/types';
+import { QUIZ_CONFIG } from '@/lib/quizConfig';
 
-export default function BaseQuiz({ quizType }: { quizType: string }) {
+import QuestionView from './QuestionView';
+import AnswerOptions from './AnswerOptions';
+import QuizResult from './QuizResult';
+import QuizError from './QuizError';
+import QuizLoader from './QuizLoader';
+
+type Props = {
+  quizType: 'capitals' | 'photos' | 'map' | 'flags';
+};
+
+export default function BaseQuiz({ quizType }: Props) {
   const { data: session } = useSession();
 
   const [allQuestions, setAllQuestions] = useState<QuestionType[]>([]);
@@ -16,15 +30,17 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState('');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
 
   const currentQuestion = questions[currentIndex];
-  const isImageAnswers = currentQuestion?.options?.[0]?.startsWith('http');
+
+  const { isImageQuestion, isImageAnswers } = QUIZ_CONFIG[quizType];
 
   useEffect(() => {
     setStatus('loading');
+
     fetch(`/api/questions/${quizType}`)
       .then((res) => {
         if (!res.ok) throw new Error('Ошибка загрузки данных');
@@ -32,12 +48,20 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
       })
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Неверный формат данных');
-        const parsed = data.map((q: any) => ({
-          ...q,
-          options: typeof q.options === 'string'
+
+        const parsed = data.map((q: any) => {
+          const optionsArray = typeof q.options === 'string'
             ? q.options.split(';').map((opt: string) => opt.trim())
-            : q.options,
-        }));
+            : q.options;
+
+          const shuffledOptions = [...optionsArray].sort(() => Math.random() - 0.5);
+
+          return {
+            ...q,
+            options: shuffledOptions,
+          };
+        });
+
         setAllQuestions(parsed);
         setQuestions(parsed.sort(() => 0.5 - Math.random()).slice(0, 10));
         setStatus('ready');
@@ -53,6 +77,7 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     setSelectedIndex(index);
     setCorrectIndex(currentQuestion.options.findIndex(opt => opt === currentQuestion.correct));
     if (isCorrect) setScore((prev) => prev + 1);
+
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
       setSelectedIndex(null);
@@ -69,7 +94,6 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     setCorrectIndex(null);
   };
 
-  // ✅ Сохраняем результат, когда викторина завершена и пользователь авторизован
   useEffect(() => {
     if (currentIndex >= questions.length && session?.user) {
       fetch("/api/result", {
@@ -82,99 +106,28 @@ export default function BaseQuiz({ quizType }: { quizType: string }) {
     }
   }, [currentIndex, questions.length, score, session]);
 
-  if (status === 'loading') {
-    return <div className={styles.answerContainer}><h3>Загрузка...</h3></div>;
-  }
-
-  if (status === 'error') {
-    return (
-      <div className={styles.answerContainer}>
-        <h2>Ошибка</h2>
-        <p>{error}</p>
-        <Link href="/" className={styles.homeLink}>На главную</Link>
-      </div>
-    );
-  }
-
-  if (currentIndex >= questions.length) {
-    return (
-      <div className={styles.answerContainer}>
-        <h2>Викторина завершена!</h2>
-        <p>Результат: {score} из {questions.length}</p>
-        <button onClick={restartQuiz} className={styles.button}>Сыграть ещё раз</button>
-        <Link href="/" className={styles.secondaryButton}>На главную</Link>
-      </div>
-    );
-  }
+  if (status === 'loading') return <QuizLoader />;
+  if (status === 'error') return <QuizError message={error} />;
+  if (currentIndex >= questions.length) return <QuizResult score={score} total={questions.length} onRestart={restartQuiz} />;
 
   return (
-    <div className={styles.answerContainer}>
-      <div className={styles.topContainer}>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
-        {currentQuestion.question?.startsWith('http') ? (
-          <div className={styles.imageWrapper}>
-            <img
-              src={currentQuestion.image ?? currentQuestion.question}
-              alt="Изображение вопроса"
-              className={styles.questionImage}
-              onError={(e) => { e.currentTarget.src = '/default.png'; }}
-            />
-          </div>
-        ) : currentQuestion.question && (
-          <h2 className={styles.questionText}>{currentQuestion.question}</h2>
-        )}
-        {currentQuestion.image && (
-          <div className={styles.imageWrapper}>
-            <img
-              src={currentQuestion.image}
-              alt="Изображение вопроса"
-              className={styles.questionImage}
-              onError={(e) => { e.currentTarget.src = '/default.png'; }}
-            />
-          </div>
-        )}
+        <div className={styles.questionContainer}>
+          <QuestionView question={currentQuestion} isImage={isImageQuestion} />
+        </div>
+        <AnswerOptions
+          question={currentQuestion}
+          selectedIndex={selectedIndex}
+          correctIndex={correctIndex}
+          isImage={isImageAnswers}
+          onSelect={handleAnswer}
+        />
       </div>
-
-      {isImageAnswers ? (
-        <div className={styles.imageOptions}>
-          {currentQuestion.options.map((url, index) => {
-            let optionClass = styles.option;
-            if (selectedIndex !== null) {
-              if (index === correctIndex) optionClass += ' ' + styles.correct;
-              else if (index === selectedIndex) optionClass += ' ' + styles.incorrect;
-            }
-
-            return (
-              <div
-                key={index}
-                className={optionClass}
-                onClick={() => selectedIndex === null && handleAnswer(url === currentQuestion.correct, index)}
-              >
-                <img
-                  src={url}
-                  alt={`Изображение ${index + 1}`}
-                  className={styles.flagImage}
-                  onError={(e) => { e.currentTarget.src = '/default-flag.png'; }}
-                />
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className={styles.textOptions}>
-          {currentQuestion.options.map((option, index) => (
-            <OptionButton
-              key={index}
-              disabled={selectedIndex !== null}
-              isCorrect={index === correctIndex}
-              isSelected={index === selectedIndex}
-              onClick={() => selectedIndex === null && handleAnswer(option === currentQuestion.correct, index)}
-            >
-              {option}
-            </OptionButton>
-          ))}
-        </div>
-      )}
+      <MenuButton href="/single" variant="back">
+        Сдаться
+      </MenuButton>
     </div>
   );
 }

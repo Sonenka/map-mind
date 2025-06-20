@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './ProgressBar.module.css';
-import Link from 'next/link';
 
 export default function ProgressBar({
   current,
@@ -23,12 +22,6 @@ export default function ProgressBar({
           Вопрос {current} из {total} ({percentage}%)
         </span>
       </div>
-      <Link
-          href="/single"
-          className={styles.progressLink}
-        >
-          ✕
-      </Link>
     </div>
   );
 }

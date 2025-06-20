@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './styles.module.css';
-import MenuButton from '@/components/MenuButton/MenuButton';
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 

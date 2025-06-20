@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useSocket } from '@/lib/useSocket';
 import { useParams, useSearchParams } from 'next/navigation';
 import styles from './RoomPage.module.css';
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
+import ProgressBar from '@/components/ProgressBar/ProgressBar';
 
 type Question = {
   id: string;
@@ -33,6 +35,12 @@ export default function RoomPage() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { data: session, status: sessionStatus } = useSession();
+
+  // Стейт для кнопки копирования
+  const [copied, setCopied] = useState(false);
+
+  // Получаем текущий URL для копирования
+  const inviteLink = typeof window !== 'undefined' ? window.location.href : '';
 
   useEffect(() => {
     if (!socket) return;
@@ -85,13 +93,17 @@ export default function RoomPage() {
 
     const playerName = session?.user?.name || 'Игрок';
 
-    socket.emit('join', { roomId, name: playerName }, (response: { success: boolean; message: string }) => {
-      if (!response.success) {
-        setError(response.message);
-      } else {
-        setError('');
+    socket.emit(
+      'join',
+      { roomId, name: playerName },
+      (response: { success: boolean; message: string }) => {
+        if (!response.success) {
+          setError(response.message);
+        } else {
+          setError('');
+        }
       }
-    });
+    );
 
     socket.on('player-joined', (names: string[]) => {
       setPlayers(names);
@@ -146,8 +158,17 @@ export default function RoomPage() {
     }
   };
 
+  // Новая функция копирования ссылки
+  const handleCopyClick = () => {
+    if (!inviteLink) return;
+    navigator.clipboard.writeText(inviteLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   if (status === 'loading') {
-    return <div className={styles['game-container']}>Загрузка вопросов...</div>;
+    return <div className={styles.wrapper}>Загрузка вопросов...</div>;
   }
 
   if (status === 'error') {
@@ -156,29 +177,33 @@ export default function RoomPage() {
 
   if (gameOver) {
     return (
-      <div className={styles['game-over-container']}>
-        <h1>Игра завершена!</h1>
-        <h2>Финальные результаты:</h2>
-        <div className={styles.scoreboard}>
-          {players.map((player) => (
-            <div key={player} className={styles['player-score']}>
-              <span className={styles['player-name']}>{player}</span>
-              <span className={styles['score-value']}>{scores[player] || 0} очков</span>
-            </div>
-          ))}
+      <div className={styles.wrapper}>
+        <div className={styles.gameContainer}>
+          <h2>Игра завершена!</h2>
+          <p>Финальные результаты:</p>
+          <div className={styles.scoreboard}>
+            {players.map((player) => (
+              <div key={player} className={styles.playerScore}>
+                <span className={styles.playerName}>{player}</span>
+                <span className={styles.scoreValue}>{scores[player] || 0} очков</span>
+              </div>
+            ))}
+          </div>
+          <MenuButton href="/multiplayer/create" variant='back'>
+            Заново
+          </MenuButton>
         </div>
       </div>
     );
+
   }
 
   const isImageAnswers = currentQuestion?.options[0]?.startsWith('http');
 
   return (
-    <div className={styles['game-container']}>
-      <h1>Комната: {roomId}</h1>
-      {error && <p className={styles.errorMessage}>{error}</p>}
+    <div className={styles.wrapper}>
 
-      <div className={styles['players-info']}>
+      <div className={styles.playersInfo}>
         <h3>Игроки ({players.length}/2):</h3>
         <ul>
           {players.map((player) => (
@@ -189,15 +214,35 @@ export default function RoomPage() {
         </ul>
       </div>
 
-      <div className={styles.progress}>
-        Вопрос {currentQuestionIndex + 1} из {gameQuestions.length}
-      </div>
-
       {players.length < 2 ? (
-        <p className={styles['waiting-message']}>Ожидание второго игрока...</p>
+        <div className={styles.gameContainer}>
+          <h2>Ожидание второго игрока...</h2>
+          <p>Скопируй ссылку, чтобы пригласить друга:</p>
+          <div className={styles.inviteLinkBox}>
+            <input
+              type="text"
+              readOnly
+              value={inviteLink}
+              className={styles.inviteLinkInput}
+              onFocus={(e) => e.currentTarget.select()}
+            />
+            <button
+              type="button"
+              onClick={handleCopyClick}
+              className={styles.copyButton}
+              aria-label="Копировать ссылку"
+            >
+              {copied ? 'Скопировано!' : 'Копировать'}
+            </button>
+          </div>
+        </div>
+        
       ) : (
         currentQuestion && (
-          <div className={styles['question-section']}>
+          <div className={styles.gameContainer}>
+            
+          <ProgressBar current={currentQuestionIndex + 1} total={gameQuestions.length} />
+          <div className={styles.questionSection}>
             {currentQuestion.question?.startsWith('http') ? (
               <div className={styles.imageWrapper}>
                 <img
@@ -210,7 +255,7 @@ export default function RoomPage() {
                 />
               </div>
             ) : (
-              <h2 className={styles['question-text']}>{currentQuestion.question}</h2>
+              <h2 className={styles.questionText}>{currentQuestion.question}</h2>
             )}
 
             {currentQuestion.image && (
@@ -242,7 +287,7 @@ export default function RoomPage() {
                         ? styles.correct
                         : styles.incorrect
                       : '',
-                    isAnswered && isCorrectOption ? styles['show-correct'] : '',
+                    isAnswered && isCorrectOption ? styles.showCorrect : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
@@ -266,7 +311,7 @@ export default function RoomPage() {
                 })}
               </div>
             ) : (
-              <div className={styles['options-grid']}>
+              <div className={styles.optionsGrid}>
                 {currentQuestion.options.map((option, index) => {
                   const playerAnswer = answers.find((a) => a.playerId === socketId);
                   const isAnswered = !!playerAnswer;
@@ -274,14 +319,14 @@ export default function RoomPage() {
                   const isCorrectOption = currentQuestion.correct === option;
 
                   const buttonClass = [
-                    styles['option-button'],
+                    styles.optionButton,
                     isAnswered ? styles.answered : '',
                     isThisOptionSelected
                       ? playerAnswer?.isCorrect
                         ? styles.correct
                         : styles.incorrect
                       : '',
-                    isAnswered && isCorrectOption ? styles['show-correct'] : '',
+                    isAnswered && isCorrectOption ? styles.showCorrect : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
@@ -299,9 +344,14 @@ export default function RoomPage() {
                 })}
               </div>
             )}
+            </div>
           </div>
         )
+        
       )}
+      <MenuButton href="/multiplayer/create" variant="back">
+        {players.length < 2 ? 'Выйти' : 'Сдаться'}
+      </MenuButton>
     </div>
   );
 }

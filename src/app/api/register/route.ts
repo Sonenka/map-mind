@@ -14,6 +14,16 @@ export async function POST(req: Request) {
       );
     }
 
+    // Проверка email-формата
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Некорректный формат email" },
+        { status: 400 }
+      );
+    }
+
+
     if (typeof name !== "string" || name.trim().length < 2) {
       return NextResponse.json(
         { error: "Имя должно содержать минимум 2 символа" },
