@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useSocket } from '@/lib/useSocket';
 import { useParams, useSearchParams } from 'next/navigation';
 import styles from './RoomPage.module.css';
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
+import ProgressBar from '@/components/ProgressBar/ProgressBar';
 
 type Question = {
   id: string;
@@ -166,7 +168,7 @@ export default function RoomPage() {
   };
 
   if (status === 'loading') {
-    return <div className={styles.gameContainer}>Загрузка вопросов...</div>;
+    return <div className={styles.wrapper}>Загрузка вопросов...</div>;
   }
 
   if (status === 'error') {
@@ -175,16 +177,21 @@ export default function RoomPage() {
 
   if (gameOver) {
     return (
-      <div className={styles.questionSection}>
-        <h2>Игра завершена!</h2>
-        <p>Финальные результаты:</p>
-        <div className={styles.scoreboard}>
-          {players.map((player) => (
-            <div key={player} className={styles.playerScore}>
-              <span className={styles.playerName}>{player}</span>
-              <span className={styles.scoreValue}>{scores[player] || 0} очков</span>
-            </div>
-          ))}
+      <div className={styles.wrapper}>
+        <div className={styles.gameContainer}>
+          <h2>Игра завершена!</h2>
+          <p>Финальные результаты:</p>
+          <div className={styles.scoreboard}>
+            {players.map((player) => (
+              <div key={player} className={styles.playerScore}>
+                <span className={styles.playerName}>{player}</span>
+                <span className={styles.scoreValue}>{scores[player] || 0} очков</span>
+              </div>
+            ))}
+          </div>
+          <MenuButton href="/multiplayer/create" variant='back'>
+            Заново
+          </MenuButton>
         </div>
       </div>
     );
@@ -194,7 +201,7 @@ export default function RoomPage() {
   const isImageAnswers = currentQuestion?.options[0]?.startsWith('http');
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.wrapper}>
 
       <div className={styles.playersInfo}>
         <h3>Игроки ({players.length}/2):</h3>
@@ -208,7 +215,7 @@ export default function RoomPage() {
       </div>
 
       {players.length < 2 ? (
-        <div className={styles.questionSection}>
+        <div className={styles.gameContainer}>
           <h2>Ожидание второго игрока...</h2>
           <p>Скопируй ссылку, чтобы пригласить друга:</p>
           <div className={styles.inviteLinkBox}>
@@ -232,10 +239,9 @@ export default function RoomPage() {
         
       ) : (
         currentQuestion && (
-          <div className="">
-          <div className={styles.progress}>
-        Вопрос {currentQuestionIndex + 1} из {gameQuestions.length}
-          </div>
+          <div className={styles.gameContainer}>
+            
+          <ProgressBar current={currentQuestionIndex + 1} total={gameQuestions.length} />
           <div className={styles.questionSection}>
             {currentQuestion.question?.startsWith('http') ? (
               <div className={styles.imageWrapper}>
@@ -338,10 +344,14 @@ export default function RoomPage() {
                 })}
               </div>
             )}
-          </div>
+            </div>
           </div>
         )
+        
       )}
+      <MenuButton href="/multiplayer" variant="back">
+        Сдаться
+      </MenuButton>
     </div>
   );
 }
