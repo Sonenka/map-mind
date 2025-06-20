@@ -34,6 +34,7 @@
   border: 3px #ff2e2e solid;
   background-color: #e41e1e;
   padding: 10px 48px;
+  width: min-content;
 }
 
 .onMain {
