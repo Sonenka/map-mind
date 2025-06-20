@@ -1,14 +1,24 @@
 /* styles.module.css */
+.wrapper {
+  height: 100vh;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  color: #ffffff;
+}
 
 .container {
   height: 100vh;
+  width: 350px;
   padding: 100px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 32px;
-  background: linear-gradient(90deg, #000000, #162944, #070e18);
   color: #ffffff;
 }
 
@@ -46,21 +56,4 @@
 .select:focus {
   border-color: #3399ff;
   background-color: #152c44;
-}
-
-.button {
-  padding: 14px 24px;
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  background-color: #0070f3;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.button:hover {
-  background-color: #005ad6;
-  transform: scale(1.03);
 }

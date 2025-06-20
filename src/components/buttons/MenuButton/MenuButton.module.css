@@ -42,6 +42,7 @@
   height: 6.25rem;
   border: 3px #ff2e2e solid;
   background-color: #e41e1e;
+  width: 100%;
 }
 
 .back:hover,

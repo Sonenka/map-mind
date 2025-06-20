@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   gap: 30px;
-  background: linear-gradient(90deg, #000000, #162944, #070e18);
+  /* background: linear-gradient(90deg, #000000, #162944, #070e18); */
   color: #ffffff;
 }
 

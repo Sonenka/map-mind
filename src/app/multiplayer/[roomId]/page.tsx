@@ -349,8 +349,8 @@ export default function RoomPage() {
         )
         
       )}
-      <MenuButton href="/multiplayer" variant="back">
-        Сдаться
+      <MenuButton href="/multiplayer/create" variant="back">
+        {players.length < 2 ? 'Выйти' : 'Сдаться'}
       </MenuButton>
     </div>
   );
