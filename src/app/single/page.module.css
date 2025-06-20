@@ -1,13 +1,3 @@
-.videoBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
-
 .overlay {
   position: absolute;
   top: 0;
@@ -20,23 +10,24 @@
 
 .container {
   max-width: 600px;
+  height: 100vh;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: 100px 0;
   text-align: center;
   color: white;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 
 .title {
   font-size: 48px;
-  margin-bottom: 30px;
 }
 
 .quizGrid {
-  display: grid;
-  grid-template-columns: repeat(1fr, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   width: 100%;
 }

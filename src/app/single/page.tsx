@@ -1,6 +1,7 @@
-import styles from './styles.module.css';
 import '../globals.css'
-import MenuButton from '@/components/buttons/MenuButton/MenuButton'; // путь можно скорректировать при необходимости
+import styles from './page.module.css';
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
+import BackgroundVideo from '@/components/BackgroundVideo/backgroundVideo';
 
 export default function Singleplayer() {
   const quizTypes = [
@@ -12,16 +13,7 @@ export default function Singleplayer() {
 
   return (
     <div>
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className={styles.videoBackground}
-      >
-        <source src="/bg.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <BackgroundVideo />
 
       <div className={styles.overlay} />
 
@@ -30,20 +22,14 @@ export default function Singleplayer() {
 
         <div className={styles.quizGrid}>
           {quizTypes.map((quiz) => (
-            <MenuButton
-              key={quiz.id}
-              href={`/quiz/${quiz.id}`}
-            >
+            <MenuButton key={quiz.id} href={`/quiz/${quiz.id}`}>
               {quiz.name}
             </MenuButton>
           ))}
         </div>
 
-        <MenuButton
-          href="/"
-          variant='back'
-        >
-          ← Назад
+        <MenuButton variant='back'>
+          Назад
         </MenuButton>
       </div>
     </div>
