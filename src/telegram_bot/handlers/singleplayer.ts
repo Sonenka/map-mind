@@ -1,8 +1,8 @@
 import { Markup } from 'telegraf';
-import { setupCapitalsGame } from './single_games/capitals_game.js';
-import { setupFlagsGame } from './single_games/flags_game.js';
-import { setupCountryPhotoGame } from './single_games/country_photo_game.js';
-import { setupCountryMapGame } from './single_games/country_map_game.js';
+import { setupCapitalsGame } from './single_games/capitals_game.ts';
+import { setupFlagsGame } from './single_games/flags_game.ts';
+import { setupCountryPhotoGame } from './single_games/country_photo_game.ts';
+import { setupCountryMapGame } from './single_games/country_map_game.ts';
 
 export function setupSinglplayerGame(bot) {
     bot.action('SINGLEPLAYER_GAME', async (ctx) => {

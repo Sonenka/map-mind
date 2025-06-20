@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
-import { setupSinglplayerGame } from './singleplayer.js';
-import { setupCheckLeaderboard } from './check_leaderboard.js';
-import { setupAuthetificate } from './authetificate.js';
+import { setupSinglplayerGame } from './singleplayer.ts';
+import { setupCheckLeaderboard } from './check_leaderboard.ts';
+import { setupAuthetificate } from './authetificate.ts';
 
 
 export function setupMenu(bot) {

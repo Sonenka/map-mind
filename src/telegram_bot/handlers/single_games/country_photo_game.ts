@@ -1,27 +1,27 @@
 import { Markup } from 'telegraf';
 import axios from 'axios';
-import { incrementCapitalsIdx, shuffleArray } from '../../utils/useful_functions.js';
+import { incrementCountryPhotoIdx, shuffleArray } from '../../utils/useful_functions.ts';
 
-export function setupCapitalsGame(bot) {
-    bot.action('CAPITALS_GAME', async (ctx) => {
-        console.log(`${ctx.from?.username || ctx.from?.first_name || 'Аноним'} | CAPITALS_GAME received`);
+export function setupCountryPhotoGame(bot) {
+    bot.action('COUNTRY_PHOTO_GAME', async (ctx) => {
+        console.log(`${ctx.from?.username || ctx.from?.first_name || 'Аноним'} | COUNTRY_PHOTO_GAME received`);
 
         ctx.answerCbQuery();
         await ctx.deleteMessage();
 
         try {
             if (!ctx.session) ctx.session = {};
-            if (!ctx.session.capitalsQuestions) {
-                const res = await axios.get(`http://localhost:3000/api/questions/capitals`);
-                ctx.session.capitalsQuestions = shuffleArray(res.data);
-                ctx.session.capitalsIdx = 0;
+            if (!ctx.session.countryPhotoQuestions) {
+                const res = await axios.get(`http://localhost:3000/api/questions/photos`);
+                ctx.session.countryPhotoQuestions = shuffleArray(res.data);
+                ctx.session.countryPhotoIdx = 0;
                 ctx.session.correctAnswers = 0;
             }
 
-            const text = 'В этой игре вам предстоит угадывать столицы предложенных стран.\n\
+            const text = 'В этой игре вам предстоит угадывать страны по фото.\n\
 В каждом вопросе по четыре варианта ответа и только один верный. Удачи!';
             ctx.reply(text, Markup.inlineKeyboard([
-                [Markup.button.callback('Начать игру', `NEXT_CAPITALS_QUESTION|${0}|${0}`)],
+                [Markup.button.callback('Начать игру', `NEXT_COUNTRY_PHOTO_QUESTION|${0}|${0}`)],
                 [Markup.button.callback('⬅️ Вернуться', 'BACK_TO_MENU')],
             ]));
         } catch (err) {
@@ -32,7 +32,7 @@ export function setupCapitalsGame(bot) {
         }
     });
 
-    bot.action(/NEXT_CAPITALS_QUESTION\|(\d+)\|(0|1)/, async (ctx) => {
+    bot.action(/NEXT_COUNTRY_PHOTO_QUESTION\|(\d+)\|(0|1)/, async (ctx) => {
         ctx.answerCbQuery();
         await ctx.editMessageReplyMarkup();
 
@@ -53,21 +53,23 @@ export function setupCapitalsGame(bot) {
             }
         }
 
-        if (questionNumer + 1 <= 10) {
-            const currentQuestion = ctx.session.capitalsQuestions[ctx.session.capitalsIdx];
-            incrementCapitalsIdx(ctx);
-            text += currentQuestion.question;
+        if (questionNumer + 1 <= 5) {
+            const currentQuestion = ctx.session.countryPhotoQuestions[ctx.session.countryPhotoIdx];
+            incrementCountryPhotoIdx(ctx);
+            text += 'Это фото из какой страны?';
 
-            const optionButtons = currentQuestion.options.map(option => {
+            const optionButtons = currentQuestion.options.map((option, index) => {
                 const isCorrect = option === currentQuestion.correct ? 1 : 0;
-                return [Markup.button.callback(option, `NEXT_CAPITALS_QUESTION|${questionNumer + 1}|${isCorrect}`)]
+                return [Markup.button.callback(option, `NEXT_COUNTRY_PHOTO_QUESTION|${questionNumer + 1}|${isCorrect}`)]
             });
 
             const controlButtons = [
                 [Markup.button.callback('❌ Завершить игру', 'BACK_TO_MENU')]
             ];
             const keyboard = [...optionButtons, ...controlButtons];
-            ctx.reply(text, Markup.inlineKeyboard(keyboard));
+
+            await ctx.replyWithPhoto(currentQuestion.question, { caption: '' });
+            await ctx.reply(text, Markup.inlineKeyboard(keyboard));
         } else {
             if (ctx.session.user) {
                 const response = await axios.post(
@@ -85,7 +87,7 @@ export function setupCapitalsGame(bot) {
             }
 
             text += '🏆 Игра завершена!\n';
-            text += 'Вы ответили правильно на ' + ctx.session.correctAnswers + ' из 10 вопросов!';
+            text += 'Вы ответили правильно на ' + ctx.session.correctAnswers + ' из 5 вопросов!';
             ctx.session.correctAnswers = 0;
             ctx.reply(text, Markup.inlineKeyboard([
                 [Markup.button.callback('⬅️ В меню', 'BACK_TO_MENU')],

@@ -4,7 +4,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { setupMenu } from './handlers/start_game.js';
+import { setupMenu } from './handlers/start_game.ts';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session());
