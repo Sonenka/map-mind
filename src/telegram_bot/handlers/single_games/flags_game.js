@@ -53,7 +53,7 @@ export function setupFlagsGame(bot) {
             }
         }
 
-        if (questionNumer + 1 <= 10) {
+        if (questionNumer + 1 <= 5) {
             const currentQuestion = ctx.session.flagsQuestions[ctx.session.flagsIdx];
             incrementFlagsIdx(ctx);
             text += currentQuestion.question + '?';
@@ -77,8 +77,24 @@ export function setupFlagsGame(bot) {
             await ctx.replyWithMediaGroup(media);
             await ctx.reply(text, Markup.inlineKeyboard(keyboard));
         } else {
+            if (ctx.session.user) {
+                const response = await axios.post(
+                    'http://localhost:3000/api/result',
+                    {
+                        score: ctx.session.correctAnswers,
+                        currentUserId: ctx.session.user.id,
+                        currentUserEmail: ctx.session.user.email,
+                    },
+                    {
+                        headers: { "Content-Type": "application/json" }
+                    }
+                );
+                console.log(`${ctx.from?.username || ctx.from?.first_name || 'Аноним'} | Ответ от сервера:`, response.data?.score || -1);
+            }
+
             text += '🏆 Игра завершена!\n';
-            text += 'Вы ответили правильно на ' + ctx.session.correctAnswers + ' из 10 вопросов!';
+            text += 'Вы ответили правильно на ' + ctx.session.correctAnswers + ' из 5 вопросов!';
+            ctx.session.correctAnswers = 0;
             ctx.reply(text, Markup.inlineKeyboard([
                 [Markup.button.callback('⬅️ В меню', 'BACK_TO_MENU')],
             ]));

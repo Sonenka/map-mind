@@ -1,6 +1,7 @@
 import { Markup } from 'telegraf';
 import { setupSinglplayerGame } from './singleplayer.js';
 import { setupCheckLeaderboard } from './check_leaderboard.js';
+import { setupAuthetificate } from './authetificate.js';
 
 
 export function setupMenu(bot) {
@@ -10,12 +11,19 @@ export function setupMenu(bot) {
         const text = 'Привет, это MapMind!\n\n\
 Здесь Вы можете проверить свои знания географии: \
 поугадывать столицы, флаги или страны по фото и их контурам.\n\
-А полная версия нашего сайта доступна в браузере: http://89.169.142.214:3000\n\n\
+А полная версия нашего сайта доступна в браузере: https://mapmind.ru\n\n\
 Выберите что хотите поделать:';
+
+        let textProfile = 'Войти в аккаунт';
+        if (!ctx.session) ctx.session = {};
+        if (ctx.session.user) {
+            textProfile = `Текущий пользователь: ${ctx.session.user.name}\n`;
+        }
 
         return ctx.reply(text, Markup.inlineKeyboard([
             [Markup.button.callback('Одиночная игра', 'SINGLEPLAYER_GAME')],
             [Markup.button.callback('Многопользовательская игра', 'MULTIPLAYER_GAME')],
+            [Markup.button.callback(textProfile, 'AUTHETICATE')],
             [Markup.button.callback('Посмотреть рейтинг пользователей', 'CHECK_LEADERBOARD')],
         ]));
     });
@@ -29,9 +37,16 @@ export function setupMenu(bot) {
 
         const text = 'Вы вернулись в главное меню. Что хотите сделать?';
 
+        let textProfile = 'Войти в аккаунт';
+        if (!ctx.session) ctx.session = {};
+        if (ctx.session.user) {
+            textProfile = `Текущий пользователь: ${ctx.session.user.name}\n`;
+        }
+
         return ctx.reply(text, Markup.inlineKeyboard([
             [Markup.button.callback('Одиночная игра', 'SINGLEPLAYER_GAME')],
             [Markup.button.callback('Многопользовательская игра', 'MULTIPLAYER_GAME')],
+            [Markup.button.callback(textProfile, 'AUTHETICATE')],
             [Markup.button.callback('Посмотреть рейтинг пользователей', 'CHECK_LEADERBOARD')],
         ]));
     });
@@ -40,11 +55,12 @@ export function setupMenu(bot) {
         ctx.answerCbQuery();
         await ctx.deleteMessage();
         // await ctx.editMessageReplyMarkup();
-        ctx.reply('Играйте с друзьями на нашем сайте!\nhttp://89.169.142.214:3000', Markup.inlineKeyboard([
+        ctx.reply('Играйте с друзьями на нашем сайте!\nhttps://mapmind.ru', Markup.inlineKeyboard([
             [Markup.button.callback('⬅️ В меню', 'BACK_TO_MENU')],
         ]));
     });
 
     setupSinglplayerGame(bot);
     setupCheckLeaderboard(bot);
+    setupAuthetificate(bot);
 }
