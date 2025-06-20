@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import '../globals.css'
-import MenuButton from '@/components/MenuButton/MenuButton'; // путь можно скорректировать при необходимости
+import MenuButton from '@/components/buttons/MenuButton/MenuButton'; // путь можно скорректировать при необходимости
 
 export default function Singleplayer() {
   const quizTypes = [

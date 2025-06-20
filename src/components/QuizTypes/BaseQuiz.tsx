@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import Link from 'next/link';
-import OptionButton from '../OptionButton/OptionButton';
+import OptionButton from '../buttons/OptionButton/OptionButton';
 import styles from './styles.module.css';
 import { QuestionType } from '../../lib/types';
 

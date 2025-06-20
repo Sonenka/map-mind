@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from './leaderboard.module.css';
-import MenuButton from "@/components/MenuButton/MenuButton";
+import MenuButton from "@/components/buttons/MenuButton/MenuButton";
 
 type Player = {
   name: string;

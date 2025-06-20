@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './OptionButton.module.css';
 
 type OptionButtonProps = {
   isCorrect: boolean;
@@ -9,7 +9,7 @@ type OptionButtonProps = {
 };
 
 export default function OptionButton({ isCorrect, isSelected, disabled, onClick, children }: OptionButtonProps) {
-  let className = styles.option;
+  let className = styles.button;
 
   if (disabled) {
     if (isCorrect) {
@@ -24,7 +24,6 @@ export default function OptionButton({ isCorrect, isSelected, disabled, onClick,
       className={className}
       onClick={onClick}
       disabled={disabled}
-      type="button"
     >
       {children}
     </button>
