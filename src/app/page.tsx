@@ -24,7 +24,6 @@ export default function Home() {
       <div className={styles.overlay} />
 
       <div className={styles.content}>
-        {/* Добавляем кнопку профиля в правый верхний угол */}
         <div className={styles.profileButtonContainer}>
           <Link href="/auth/profile" className={styles.profileButton}>
             {session ? (

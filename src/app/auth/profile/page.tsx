@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../auth.module.css";
 import { useRouter } from "next/navigation";
+import MenuButton from '@/components/buttons/MenuButton/MenuButton';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -142,175 +142,185 @@ export default function ProfilePage() {
   if (status === "loading") return <p className={styles.title}>Загрузка...</p>;
   if (!session) {
     return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>Профиль</h1>
-        <p className={styles.authMessage}>Пожалуйста, войдите в аккаунт</p>
-        
-        <div className={styles.authButtons}>
-          <button 
-            onClick={() => router.push('/auth/login')} 
-            className={styles.authButton}
-          >
-            Есть аккаунт? Войти
-          </button>
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>Профиль</h1>
+          <p className={styles.authMessage}>Пожалуйста, войдите в аккаунт</p>
           
-          <button 
-            onClick={() => router.push('/auth/register')} 
-            className={styles.secondaryAuthButton}
-          >
-            Нет аккаунта? Зарегистрироваться
-          </button>
+          <div className={styles.authButtons}>
+            <button 
+              onClick={() => router.push('/auth/login')} 
+              className={styles.authButton}
+            >
+              Есть аккаунт? Войти
+            </button>
+            
+            <button 
+              onClick={() => router.push('/auth/register')} 
+              className={styles.secondaryAuthButton}
+            >
+              Нет аккаунта? Зарегистрироваться
+            </button>
+          </div>
         </div>
+        <MenuButton href='/' variant="back">
+          Назад
+        </MenuButton>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Профиль</h1>
-      
-      {error && <p className={styles.error}>{error}</p>}
-      {success && <p className={styles.success}>{success}</p>}
-
-      <div className={styles.profileSection}>
-        <h2>Основная информация</h2>
-        <p>Email: {session.user?.email}</p>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Профиль</h1>
         
-        {isEditingName ? (
-          <div className={styles.editField}>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className={styles.input}
-            />
-            <button onClick={handleNameUpdate} className={styles.smallButton}>
-              Сохранить
-            </button>
+        {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>{success}</p>}
+
+        <div className={styles.profileSection}>
+          <h2>Основная информация</h2>
+          <p>Email: {session.user?.email}</p>
+          
+          {isEditingName ? (
+            <div className={styles.editField}>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className={styles.input}
+              />
+              <button onClick={handleNameUpdate} className={styles.smallButton}>
+                Сохранить
+              </button>
+              <button 
+                onClick={() => setIsEditingName(false)} 
+                className={styles.secondarySmallButton}
+              >
+                Отмена
+              </button>
+            </div>
+          ) : (
+            <div className={styles.editField}>
+              <p>Имя: {name}</p>
+              <button 
+                onClick={() => setIsEditingName(true)} 
+                className={styles.smallButton}
+              >
+                Изменить имя
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.profileSection}>
+          <h2>Безопасность</h2>
+          
+          {isChangingPassword ? (
+            <div className={styles.passwordSection}>
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Текущий пароль"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className={styles.input}
+                />
+              </div>
+              
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Новый пароль"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={styles.input}
+                />
+              </div>
+              
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Подтвердите новый пароль"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={styles.input}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={styles.toggleButton}
+                >
+                  {showPassword ? "Скрыть" : "Показать"}
+                </button>
+              </div>
+              
+              <div className={styles.buttonGroup}>
+                <button onClick={handlePasswordChange} className={styles.smallButton}>
+                  Сохранить пароль
+                </button>
+                <button 
+                  onClick={() => {
+                    setIsChangingPassword(false);
+                    setCurrentPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                  }} 
+                  className={styles.secondarySmallButton}
+                >
+                  Отмена
+                </button>
+              </div>
+            </div>
+          ) : (
             <button 
-              onClick={() => setIsEditingName(false)} 
-              className={styles.secondarySmallButton}
-            >
-              Отмена
-            </button>
-          </div>
-        ) : (
-          <div className={styles.editField}>
-            <p>Имя: {name}</p>
-            <button 
-              onClick={() => setIsEditingName(true)} 
+              onClick={() => setIsChangingPassword(true)} 
               className={styles.smallButton}
             >
-              Изменить имя
+              Изменить пароль
             </button>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      <div className={styles.profileSection}>
-        <h2>Безопасность</h2>
-        
-        {isChangingPassword ? (
-          <div className={styles.passwordSection}>
-            <div className={styles.passwordContainer}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Текущий пароль"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className={styles.input}
-              />
+        <div className={styles.profileSection}>
+          <h2>Удаление аккаунта</h2>
+          <p>Это действие нельзя отменить. Все ваши данные будут удалены.</p>
+          
+          {isDeleting ? (
+            <div className={styles.deleteConfirmation}>
+              <p>Вы уверены, что хотите удалить аккаунт?</p>
+              <div className={styles.buttonGroup}>
+                <button 
+                  onClick={handleAccountDelete} 
+                  className={styles.dangerButton}
+                >
+                  Да, удалить
+                </button>
+                <button 
+                  onClick={() => setIsDeleting(false)} 
+                  className={styles.secondarySmallButton}
+                >
+                  Отмена
+                </button>
+              </div>
             </div>
-            
-            <div className={styles.passwordContainer}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Новый пароль"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className={styles.input}
-              />
-            </div>
-            
-            <div className={styles.passwordContainer}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Подтвердите новый пароль"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className={styles.input}
-              />
-              <button 
-                type="button" 
-                onClick={() => setShowPassword(!showPassword)}
-                className={styles.toggleButton}
-              >
-                {showPassword ? "Скрыть" : "Показать"}
-              </button>
-            </div>
-            
-            <div className={styles.buttonGroup}>
-              <button onClick={handlePasswordChange} className={styles.smallButton}>
-                Сохранить пароль
-              </button>
-              <button 
-                onClick={() => {
-                  setIsChangingPassword(false);
-                  setCurrentPassword("");
-                  setNewPassword("");
-                  setConfirmPassword("");
-                }} 
-                className={styles.secondarySmallButton}
-              >
-                Отмена
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button 
-            onClick={() => setIsChangingPassword(true)} 
-            className={styles.smallButton}
-          >
-            Изменить пароль
-          </button>
-        )}
-      </div>
+          ) : (
+            <button 
+              onClick={() => setIsDeleting(true)} 
+              className={styles.dangerButton}
+            >
+              Удалить аккаунт
+            </button>
+          )}
+        </div>
 
-      <div className={styles.profileSection}>
-        <h2>Удаление аккаунта</h2>
-        <p>Это действие нельзя отменить. Все ваши данные будут удалены.</p>
-        
-        {isDeleting ? (
-          <div className={styles.deleteConfirmation}>
-            <p>Вы уверены, что хотите удалить аккаунт?</p>
-            <div className={styles.buttonGroup}>
-              <button 
-                onClick={handleAccountDelete} 
-                className={styles.dangerButton}
-              >
-                Да, удалить
-              </button>
-              <button 
-                onClick={() => setIsDeleting(false)} 
-                className={styles.secondarySmallButton}
-              >
-                Отмена
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button 
-            onClick={() => setIsDeleting(true)} 
-            className={styles.dangerButton}
-          >
-            Удалить аккаунт
-          </button>
-        )}
+        <button className={styles.button} onClick={() => signOut()}>
+          Выйти
+        </button>
       </div>
-
-      <button className={styles.button} onClick={() => signOut()}>
-        Выйти
-      </button>
+      <MenuButton href='/' variant="back">
+              Назад
+      </MenuButton>
     </div>
   );
 }

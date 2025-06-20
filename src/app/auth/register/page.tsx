@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "../auth.module.css";
 
-import Input from "../../../components/Input/page";
-import PasswordInput from "../../../components/PasswordInput/page";
-import ErrorMessage from "../../../components/ErrorMessage/Page";
+import Input from "@/components/Input/page";
+import PasswordInput from "@/components/PasswordInput/page";
+import ErrorMessage from "@/components/ErrorMessage/Page";
+import MenuButton from "@/components/buttons/MenuButton/MenuButton";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -61,47 +62,52 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Регистрация</h1>
-      <ErrorMessage text={error} />
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Регистрация</h1>
+        <ErrorMessage text={error} />
 
-      <Input
-        placeholder="Имя"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className={styles.input}
-      />
+        <Input
+          placeholder="Имя"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className={styles.input}
+        />
 
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className={styles.input}
-      />
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
+        />
 
-      <PasswordInput
-        placeholder="Пароль"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <PasswordInput
+          placeholder="Пароль"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <PasswordInput
-        placeholder="Подтвердите пароль"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
+        <PasswordInput
+          placeholder="Подтвердите пароль"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
 
-      <button className={styles.button} onClick={handleRegister}>
-        Зарегистрироваться
-      </button>
+        <button className={styles.button} onClick={handleRegister}>
+          Зарегистрироваться
+        </button>
 
-      <div className={styles.loginPrompt}>
-        <p>Уже зарегистрированы?</p>
-        <Link href="/auth/login" className={styles.loginLink}>
-          Войдите в аккаунт
-        </Link>
+        <div className={styles.loginPrompt}>
+          <p>Уже зарегистрированы?</p>
+          <Link href="/auth/login" className={styles.loginLink}>
+            Войдите в аккаунт
+          </Link>
+        </div>
       </div>
+      <MenuButton href='/' variant="back">
+        Назад
+      </MenuButton>
     </div>
   );
 }
