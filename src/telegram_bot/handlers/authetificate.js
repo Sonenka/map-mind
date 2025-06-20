@@ -54,6 +54,7 @@ export function setupAuthetificate(bot) {
                     ])
                 );
             } catch (err) {
+                ctx.session.user = null;
                 console.error("Ошибка входа:", err.response?.data || err.message);
                 ctx.reply(
                     "❌ Ошибка авторизации. Проверьте email и пароль.",

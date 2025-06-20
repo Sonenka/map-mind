@@ -16,11 +16,19 @@ export async function DELETE(request: Request) {
 
   try {
     // Удаляем пользователя
-    await prisma.user.delete({
+    const user = await prisma.user.findUnique({
       where: { email: session.user.email },
+      select: { id: true }
     });
+    if (!user) {
+      return NextResponse.json({ message: "Пользователь не найден" }, { status: 404 });
+    }
+    await prisma.result.deleteMany({ where: { userId: user.id } });
+    await prisma.user.deleteMany({ where: { id: user.id } });
 
-    // Здесь можно также удалить все связанные данные пользователя
+    await prisma.user.delete({
+      where: { id: user.id },
+    });
 
     return NextResponse.json(
       { message: "Аккаунт успешно удален" },

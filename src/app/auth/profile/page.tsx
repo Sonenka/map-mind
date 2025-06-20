@@ -276,39 +276,7 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <div className={styles.profileSection}>
-        <h2>Удаление аккаунта</h2>
-        <p>Это действие нельзя отменить. Все ваши данные будут удалены.</p>
-        
-        {isDeleting ? (
-          <div className={styles.deleteConfirmation}>
-            <p>Вы уверены, что хотите удалить аккаунт?</p>
-            <div className={styles.buttonGroup}>
-              <button 
-                onClick={handleAccountDelete} 
-                className={styles.dangerButton}
-              >
-                Да, удалить
-              </button>
-              <button 
-                onClick={() => setIsDeleting(false)} 
-                className={styles.secondarySmallButton}
-              >
-                Отмена
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button 
-            onClick={() => setIsDeleting(true)} 
-            className={styles.dangerButton}
-          >
-            Удалить аккаунт
-          </button>
-        )}
-      </div>
-
-      <button className={styles.button} onClick={() => signOut()}>
+      <button className={styles.button} onClick={() => signOut({ callbackUrl: "https://mapmind.ru" })}>
         Выйти
       </button>
     </div>
