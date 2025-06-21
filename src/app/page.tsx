@@ -23,7 +23,7 @@ export default function Home() {
 
       <div className={styles.overlay} />
 
-      <div className={styles.content}>
+      {/* <div className={styles.content}> */}
         <div className={styles.profileButtonContainer}>
           <Link href="/auth/profile" className={styles.profileButton}>
             {session ? (
@@ -49,7 +49,7 @@ export default function Home() {
             Рейтинг
           </MenuButton>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 }

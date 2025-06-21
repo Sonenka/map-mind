@@ -4,7 +4,11 @@
   min-height: 100vh;
   overflow: hidden;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10% 0;
+  color: white;
 }
 
 .videoBackground {
@@ -27,26 +31,13 @@
   z-index: -1;
 }
 
-.content {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-  color: white;
-  
-  height: 100%;
-  margin-top: 90px;
-  display: flex;
-  flex-direction: column;
-  gap: 100px;
-}
-
 .title {
   font-size: 96px;
   margin-bottom: 40px;
 }
 
 .menu {
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 20px;

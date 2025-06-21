@@ -20,6 +20,7 @@
   border: 3px #2e81ff solid;
   background-color: #1e6de4;
   padding: 0 32px;
+  width: 100%;
 }
 
 .default:hover {
@@ -54,4 +55,11 @@
 .onMain:active {
   box-shadow: 7px 5px 40px -10px #ff4444;
   border: 3px #ff4a4a solid;
+}
+
+@media (max-width: 1440px) {
+  .default,
+  .onMain {
+    height: 80px;
+  }
 }
