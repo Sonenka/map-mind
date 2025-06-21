@@ -19,7 +19,6 @@
 
 .button:disabled {
   cursor: default;
-  opacity: 0.8;
 }
 
 .correct {
@@ -36,4 +35,11 @@
 
 .button:has(img) {
   padding: 0;
+}
+
+
+@media (max-width: 375px) {
+  .button {
+    padding: 4px;
+  } 
 }

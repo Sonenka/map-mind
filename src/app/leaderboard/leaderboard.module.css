@@ -113,3 +113,14 @@
     gap: 8px;
   }
 }
+
+
+@media (max-width: 375px) {
+  .container {
+    gap: 12px;
+  }
+
+  .item {
+    padding: 12px;
+  }
+}

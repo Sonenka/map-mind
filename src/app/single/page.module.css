@@ -58,4 +58,8 @@
   .quizGrid {
     gap: 15px;
   } 
+
+  .title {
+    font-size: 24px;
+  }
 }

@@ -29,6 +29,11 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
+.loaderContainer {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
 /* вопросы */
 
 .questionText {
@@ -133,5 +138,21 @@
 
   .textOptions {
     gap: 10px;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .questionText {
+    font-size: 28px;
+    min-height: 140px;
+  } 
+
+  .wrapper {
+    gap: 10px;
+  }
+
+  .container > h2 {
+    font-size: 28px;
   }
 }

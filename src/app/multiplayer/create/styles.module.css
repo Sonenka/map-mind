@@ -75,3 +75,14 @@
     font-size: 32px;
   }
 }
+
+
+@media (max-width: 375px) {
+  .wrapper {
+    padding: 0 10px;
+  }
+
+  .container {
+    padding: 0;
+  }
+}

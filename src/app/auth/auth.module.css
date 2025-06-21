@@ -252,7 +252,7 @@
   .wrapper {
     gap: 15px;
   }
-
+  
   .container {
     padding: 16px;
     gap: 10px;
@@ -277,5 +277,19 @@
 
   .loginLink {
     margin: 0;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .wrapper {
+    /* padding: 10px; */
+    height: auto;
+    min-height: 100vh;
+    gap: 10px;
+  }
+
+  .container {
+    padding: 12px;
   }
 }

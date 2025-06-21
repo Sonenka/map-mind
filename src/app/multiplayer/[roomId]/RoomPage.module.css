@@ -66,6 +66,7 @@
   border-radius: 12px;
   border: 2px solid #445b7c;
   background-color: #0d1b2a;
+  overflow: hidden;
   padding: 8px;
 }
 
@@ -202,6 +203,10 @@
   background-color: #005ad6;
 }
 
+.gameContainer h2 {
+  text-align: center;
+}
+
 .scoreboard {
   display: flex;
   flex-direction: column;
@@ -279,5 +284,28 @@
 
   .optionsGrid {
     gap: 10px;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .gameContainer {
+    padding: 12px;
+  }
+
+  .questionText {
+    font-size: 28px;
+  }
+
+  .optionsGrid {
+    gap: 4px;
+  }
+
+  .imageWrapper {
+    padding: 0;
+  }
+
+  .questionImage {
+    object-fit: fill;
   }
 }
