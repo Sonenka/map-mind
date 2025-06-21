@@ -14,13 +14,18 @@
 
 .playersInfo {
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   color: #dddddd;
 }
 
 .playersInfo ul {
   list-style: none;
+}
+
+.playersInfo h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .gameContainer {
@@ -79,8 +84,8 @@
 }
 
 .optionButton {
-  padding: 16px;
-  font-size: 20px;
+  padding: 12px;
+  font-size: 16px;
   font-weight: 500;
   border-radius: 12px;
   background-color: #1a2b3f;

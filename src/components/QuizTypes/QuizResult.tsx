@@ -9,7 +9,7 @@ type Props = {
 
 export default function QuizResult({ score, total, onRestart }: Props) {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.end}>
       <div className={styles.container}>
         <h2>Викторина завершена!</h2>
         <h2>Результат: {score} из {total}</h2>

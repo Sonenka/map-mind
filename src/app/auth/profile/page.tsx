@@ -282,7 +282,7 @@ export default function ProfilePage() {
           )}
         </div>
 
-        <div className={styles.profileSection}>
+        {/* <div className={styles.profileSection}>
           <h2>Удаление аккаунта</h2>
           <p>Это действие нельзя отменить. Все ваши данные будут удалены.</p>
           
@@ -312,10 +312,10 @@ export default function ProfilePage() {
               Удалить аккаунт
             </button>
           )}
-        </div>
+        </div> */}
 
         <button className={styles.button} onClick={() => signOut()}>
-          Выйти
+          Выйти из аккаунта
         </button>
       </div>
       <MenuButton href='/' variant="back">
