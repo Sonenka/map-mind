@@ -57,3 +57,21 @@
   border-color: #3399ff;
   background-color: #152c44;
 }
+
+
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .container {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+}

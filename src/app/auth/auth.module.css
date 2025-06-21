@@ -79,7 +79,7 @@
 }
 
 .profileSection {
-  padding: 1rem;
+  padding: 16PX;
   border: 1px solid #ddd;
   border-radius: 8px;
   display: flex;
@@ -244,5 +244,38 @@
 
   .container {
     width: 100%;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .wrapper {
+    gap: 15px;
+  }
+
+  .container {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .profileSection {
+    padding: 12px;
+    border: 1px solid #aaa;
+  }
+
+  .profileSection h2 {
+    font-size: 24px;
+  }
+
+  .input {
+    font-size: 14px;
+  }
+
+  .loginLink {
+    margin: 0;
   }
 }

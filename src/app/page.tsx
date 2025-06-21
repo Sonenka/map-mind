@@ -42,7 +42,7 @@ export default function Home() {
           </MenuButton>
 
           <MenuButton href="/multiplayer/create">
-            Многопользовательская игра
+            Дуэль
           </MenuButton>
 
           <MenuButton href="/leaderboard">

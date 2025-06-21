@@ -7,7 +7,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 10% 0;
+  padding: 10% 20px;
   color: white;
 }
 
@@ -33,14 +33,15 @@
 
 .title {
   font-size: 96px;
-  margin-bottom: 40px;
 }
 
 .menu {
+  width: 100%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
 }
 
 /* Стили для кнопки профиля */
@@ -80,5 +81,19 @@
     flex-direction: column;
     justify-content: center;
     gap: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 80px;
+  }
+
+  .container {
+    gap: 30px;
+  }
+
+  .menu {
+    gap: 15px;
   }
 }

@@ -118,6 +118,20 @@
   .end {
     padding: 20px;
   }
+}
 
-  
+
+@media (max-width: 480px) {
+  .questionText {
+    font-size: 32px;
+    min-height: 155px;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .textOptions {
+    gap: 10px;
+  }
 }

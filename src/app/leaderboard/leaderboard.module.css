@@ -25,6 +25,9 @@
   padding: 0;
   margin: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .item {
@@ -33,7 +36,6 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 16px 24px;
-  margin-bottom: 12px;
   border-radius: 10px;
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -95,4 +97,19 @@
   .container {
     gap: 30px;
   } 
+}
+
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .list {
+    gap: 8px;
+  }
 }

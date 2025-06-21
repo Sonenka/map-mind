@@ -4,7 +4,7 @@
   align-items: center;
   
   border-radius: 100px;
-  font-size: 1.75rem;
+  font-size: 28px;
   
   cursor: pointer;
   transition: 0.4s;
@@ -16,7 +16,7 @@
 }
 
 .default {
-  height: 6.25rem;
+  height: 100px;
   border: 3px #2e81ff solid;
   background-color: #1e6de4;
   padding: 0 32px;
@@ -62,4 +62,21 @@
   .onMain {
     height: 80px;
   }
+}
+
+
+@media (max-width: 480px) {
+ .button {
+  font-size: 24px;
+ } 
+
+ .default,
+ .onMain {
+  height: 70px;
+  padding: 0 16px;
+ }
+
+ .back {
+  padding: 0 32px;
+ }
 }
