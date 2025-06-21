@@ -165,7 +165,7 @@
   font-size: 18px;
   font-weight: 500;
   color: #ffffff;
-  margin-bottom: -20px;
+  /* margin-bottom: -20px; */
 }
 
 .inviteLinkBox {
@@ -207,7 +207,6 @@
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  margin-top: 16px;
 }
 
 .playerScore {
@@ -257,5 +256,12 @@
 
   .gameContainer {
     padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gameContainer {
+    width: 100%;
+    /* gap: 20px; */
   }
 }

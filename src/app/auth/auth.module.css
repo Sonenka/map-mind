@@ -155,7 +155,6 @@
 
 .authMessage {
   text-align: center;
-  margin-bottom: 1.5rem;
   color: #666;
 }
 
@@ -235,5 +234,15 @@
 
   .container {
     padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 0 20px;
+  }
+
+  .container {
+    width: 100%;
   }
 }
