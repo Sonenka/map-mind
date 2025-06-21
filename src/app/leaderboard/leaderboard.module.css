@@ -82,3 +82,12 @@
     opacity: 1;
   }
 }
+
+
+
+@media (max-width: 1024px) {
+  .container {
+    justify-content: center;
+    gap: 50px;
+  }
+}

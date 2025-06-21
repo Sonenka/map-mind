@@ -96,3 +96,11 @@
     height: 15vh;
   }
 }
+
+
+@media (max-width: 1024px) {
+  .wrapper {
+    justify-content: center;
+    gap: 50px;
+  }
+}
